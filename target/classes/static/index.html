@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro</title>
+</head>
+<body>
+    <h2>Registro de Persona</h2>
+    <form id="formRegistro">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required><br><br>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" required><br><br>
+
+        <label for="peso">Peso:</label>
+        <input type="number" id="peso" name="peso" required><br><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+
+    <br><br>
+
+    <!-- Botón para ir a la página de clientes -->
+    <button onclick="window.location.href='clientes.html'">Ver Clientes</button>
+
+    <script>
+        document.getElementById('formRegistro').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita que el formulario se envíe de manera tradicional
+
+            // Obtén los valores del formulario
+            const nombre = document.getElementById('nombre').value;
+            const apellido = document.getElementById('apellido').value;
+            const peso = document.getElementById('peso').value;
+
+            // Crea un objeto JSON con los datos
+            const data = {
+                nombre: nombre,
+                apellido: apellido,
+                peso: peso
+            };
+
+            // Envía los datos usando fetch
+            fetch('http://localhost:8080/crear', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Éxito:', result);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

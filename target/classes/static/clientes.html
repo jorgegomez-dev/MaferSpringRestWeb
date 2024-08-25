@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Clientes</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Clientes Registrados</h2>
+
+    <table id="tablaClientes">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Peso</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se añadirán los clientes dinámicamente -->
+        </tbody>
+    </table>
+
+    <br><br>
+
+    <!-- Botón para volver a la página de registro -->
+    <button onclick="window.location.href='index.html'">Volver a Registro</button>
+
+    <!-- Modal para editar cliente -->
+    <div id="modalEditar" style="display: none;">
+        <h2>Editar Cliente</h2>
+        <form id="formEditar">
+            <label for="editNombre">Nombre:</label>
+            <input type="text" id="editNombre" required><br><br>
+
+            <label for="editApellido">Apellido:</label>
+            <input type="text" id="editApellido" required><br><br>
+
+            <label for="editPeso">Peso:</label>
+            <input type="number" id="editPeso" required><br><br>
+
+            <!-- Campo oculto para almacenar el ID del cliente -->
+            <input type="hidden" id="editId">
+
+            <button type="submit">Guardar Cambios</button>
+        </form>
+    </div>
+
+    <script>
+        // Función para obtener los clientes desde el servidor
+        function obtenerClientes() {
+            fetch('http://localhost:8080/clientes')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al obtener los clientes');
+                    }
+                    return response.json();
+                })
+                .then(clientes => {
+                    mostrarClientes(clientes);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Función para mostrar los clientes en la tabla
+        function mostrarClientes(clientes) {
+            const tbody = document.querySelector('#tablaClientes tbody');
+            tbody.innerHTML = ''; // Limpiar contenido previo
+
+            clientes.forEach(cliente => {
+                const fila = document.createElement('tr');
+
+                const celdaNombre = document.createElement('td');
+                celdaNombre.textContent = cliente.nombre;
+                fila.appendChild(celdaNombre);
+
+                const celdaApellido = document.createElement('td');
+                celdaApellido.textContent = cliente.apellido;
+                fila.appendChild(celdaApellido);
+
+                const celdaPeso = document.createElement('td');
+                celdaPeso.textContent = cliente.peso;
+                fila.appendChild(celdaPeso);
+
+                // Crear celdas de botones (Editar y Eliminar)
+                const celdaAcciones = document.createElement('td');
+
+                // Botón Editar
+                const botonEditar = document.createElement('button');
+                botonEditar.textContent = 'Editar';
+                botonEditar.onclick = () => abrirModalEditar(cliente);  // Pasamos el cliente seleccionado
+                celdaAcciones.appendChild(botonEditar);
+
+                // Botón Eliminar
+                const botonEliminar = document.createElement('button');
+                botonEliminar.textContent = 'Eliminar';
+                botonEliminar.onclick = () => eliminarCliente(cliente.id);  // Pasamos el ID del cliente
+                celdaAcciones.appendChild(botonEliminar);
+
+                fila.appendChild(celdaAcciones);
+                tbody.appendChild(fila);
+            });
+        }
+
+        // Función para eliminar cliente
+        function eliminarCliente(id) {
+            if (confirm('¿Estás seguro de que deseas eliminar este cliente?')) {
+                fetch(`http://localhost:8080/delete/${id}`, {  // Usamos el id del cliente
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al eliminar el cliente');
+                    }
+                    alert('Cliente eliminado exitosamente');
+                    obtenerClientes(); // Recargar la tabla de clientes
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+
+        // Función para abrir el modal de edición con los datos del cliente
+        function abrirModalEditar(cliente) {
+            document.getElementById('modalEditar').style.display = 'block';
+            document.getElementById('editNombre').value = cliente.nombre;
+            document.getElementById('editApellido').value = cliente.apellido;
+            document.getElementById('editPeso').value = cliente.peso;
+            document.getElementById('editId').value = cliente.id;  // Guardamos el id del cliente en un campo oculto
+        }
+
+        // Función para guardar los cambios del cliente editado
+        document.getElementById('formEditar').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const id = document.getElementById('editId').value;  // Tomamos el ID del campo oculto
+            const nombre = document.getElementById('editNombre').value;
+            const apellido = document.getElementById('editApellido').value;
+            const peso = document.getElementById('editPeso').value;
+
+            // Cuerpo de la solicitud PUT
+            const data = {
+                nombre: nombre,
+                apellido: apellido,
+                peso: peso
+            };
+
+            fetch(`http://localhost:8080/update/${id}`, {  // Usamos el id del cliente en la URL
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al actualizar el cliente');
+                }
+                alert('Cliente actualizado exitosamente');
+                document.getElementById('modalEditar').style.display = 'none'; // Cerrar el modal
+                obtenerClientes(); // Recargar la tabla de clientes
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        // Llamar a la función para obtener y mostrar los clientes cuando se cargue la página
+        window.onload = obtenerClientes;
+    </script>
+</body>
+</html>
