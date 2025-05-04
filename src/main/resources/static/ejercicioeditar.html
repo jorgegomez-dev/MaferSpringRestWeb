@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Ejercicio</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 5px;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: calc(33% - 10px);
+        }
+
+        button[type="submit"] {
+            background-color: #27ae60;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #219a52;
+            transform: translateY(-2px);
+        }
+
+        .add-button {
+            background-color: #3498db;
+        }
+
+        .add-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para campos numéricos */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Estilos para campos requeridos */
+        input:required {
+            border-left: 3px solid #3498db;
+        }
+
+        /* Estilos para campos con error */
+        input:invalid:not(:placeholder-shown) {
+            border-color: #e74c3c;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            form {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            h1 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Efectos hover */
+        input:hover {
+            border-color: #3498db;
+        }
+
+        /* Grupos de campos relacionados */
+        .form-group {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        /* Estilos para placeholder */
+        input::placeholder {
+            color: #95a5a6;
+        }
+
+        /* Estilos para campos de URL */
+        input[type="text"][id="urlimgejercicio"] {
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        /* Estilos para campos de texto */
+        input[type="text"] {
+            min-height: 42px;
+        }
+
+        /* Estilos para campos numéricos con decimales */
+        input[type="number"][step="0.01"] {
+            font-family: monospace;
+        }
+
+        /* Contenedor de botones */
+        form > button:last-child {
+            margin-top: 20px;
+        }
+
+        /* Estilos para campos deshabilitados */
+        input:disabled {
+            background-color: #f8f9fa;
+            border-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Editar Ejercicio</h1>
+
+    <form id="editExerciseForm">
+        <label for="nombreEjercicio">Nombre Ejercicio:</label>
+        <input type="text" id="nombreEjercicio" name="nombreEjercicio" required>
+
+        <label for="sexo">Sexo:</label>
+        <input type="text" id="sexo" name="sexo" required>
+
+        <label for="cantSeriesMin">Cant. Series Min:</label>
+        <input type="number" id="cantSeriesMin" name="cantSeriesMin" required>
+
+        <label for="cantSeriesMax">Cant. Series Max:</label>
+        <input type="number" id="cantSeriesMax" name="cantSeriesMax" required>
+
+        <label for="cantRepeticionesMin">Cant. Repeticiones Min:</label>
+        <input type="number" id="cantRepeticionesMin" name="cantRepeticionesMin" required>
+
+        <label for="cantRepeticionesMax">Cant. Repeticiones Max:</label>
+        <input type="number" id="cantRepeticionesMax" name="cantRepeticionesMax" required>
+
+        <label for="descansoMinutosMin">Descanso Min (minutos):</label>
+        <input type="number" id="descansoMinutosMin" name="descansoMinutosMin" step="0.01" required>
+
+        <label for="descansoMinutosMax">Descanso Max (minutos):</label>
+        <input type="number" id="descansoMinutosMax" name="descansoMinutosMax" step="0.01" required>
+
+        <label for="musculo">Músculo:</label>
+        <input type="text" id="musculo" name="musculo" required>
+
+        <label for="urlimgejercicio">Imagen Ejercicio:</label>
+        <input type="text" id="urlimgejercicio" name="urlimgejercicio" required>
+
+        <button type="submit">Guardar Cambios</button>
+        <button class="add-button" onclick="window.location.href='ejercicios.html'">Volver</button>
+        <button class="add-button" onclick="window.location.href='admincontrolpanel.html'">Regresar al Panel</button>
+    </form>
+
+    <script>
+
+        // Desde aca es el mismo codigo para todas las paginas de la app, con las funciones necesarias para
+        // solicitar las validaciones correspondientes, el almacenamiento, la carga de id y session, y la informacion
+        // servida para la siguiente pagina en localStorage()
+        //-----------------------------------------------------------------------------------------------------------
+
+    async function validarSession() {
+        // Obtén el id y la sesión de localStorage
+        const id = localStorage.getItem('id');
+        const session = localStorage.getItem('session');
+
+        if (!id || !session) {
+            console.warn('ID o sesión no disponibles');
+            window.location.href = '/login.html'; // Redirige al login si no están presentes
+            return false; // La sesión no es válida
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/autenticacion/validarSession', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'id': id,
+                    'session': session
+                }
+            });
+
+            if (response.ok) {
+                return true; // La sesión es válida
+            } else if (response.status === 401) {
+                console.warn('Sesión inválida o expirada');
+                // Borra el id y la sesión de localStorage
+                localStorage.removeItem('id');
+                localStorage.removeItem('session');
+                // Redirige al usuario a la página de login
+                window.location.href = '/login.html'; // Cambia esto a tu ruta de login
+                return false;
+            } else {
+                console.error('Error al validar la sesión:', response.statusText);
+                return false; // Otros errores
+            }
+        } catch (error) {
+            console.error('Error al validar la sesión:', error);
+            return false; // Error al validar
+        }
+    }
+
+    // Ejecuta la validación de sesión al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+        validarSession(); // Verifica la sesión al cargar cualquier página
+    });
+
+        // Hasta aca es el mismo codigo para todas las paginas de la app, con las funciones necesarias para
+        // solicitar las validaciones correspondientes, el almacenamiento, la carga de id y session, y la informacion
+        // servida para la siguiente pagina.
+        //-----------------------------------------------------------------------------------------------------------
+
+        // Obtener el ID del ejercicio desde la URL
+        const params = new URLSearchParams(window.location.search);
+        const ejercicioId = params.get('id');
+
+        // Función para cargar datos del ejercicio
+        function cargarDatosEjercicio(id) {
+            fetch(`http://localhost:8080/api/ejercicios/buscarEjercicioId/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al cargar los datos del ejercicio');
+                    }
+                    return response.json();
+                })
+                .then(ejercicio => {
+                    // Verificar y asignar los valores de los campos
+                    document.getElementById('nombreEjercicio').value = ejercicio.nombreEjercicio || '';
+                    document.getElementById('sexo').value = ejercicio.sexo || '';
+                    document.getElementById('cantSeriesMin').value = ejercicio.cantSeriesMin || 0;
+                    document.getElementById('cantSeriesMax').value = ejercicio.cantSeriesMax || 0;
+                    document.getElementById('cantRepeticionesMin').value = ejercicio.cantRepeticionesMin || 0;
+                    document.getElementById('cantRepeticionesMax').value = ejercicio.cantRepeticionesMax || 0;
+                    document.getElementById('descansoMinutosMin').value = ejercicio.descansoMinutosMin || 0;
+                    document.getElementById('descansoMinutosMax').value = ejercicio.descansoMinutosMax || 0;
+                    document.getElementById('musculo').value = ejercicio.musculo || '';
+                    document.getElementById('urlimgejercicio').value = ejercicio.urlimgejercicio || '';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    console.log('No se pudo cargar el ejercicio.');
+                });
+        }
+
+        // Cargar los datos del ejercicio al iniciar
+        if (ejercicioId) {
+            cargarDatosEjercicio(ejercicioId);
+        } else {
+            console.log('ID de ejercicio no encontrado.');
+        }
+
+        // Manejar la actualización del ejercicio
+        document.getElementById('editExerciseForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const ejercicioData = {
+                nombreEjercicio: document.getElementById('nombreEjercicio').value,
+                sexo: document.getElementById('sexo').value,
+                cantSeriesMin: parseInt(document.getElementById('cantSeriesMin').value),
+                cantSeriesMax: parseInt(document.getElementById('cantSeriesMax').value),
+                cantRepeticionesMin: parseInt(document.getElementById('cantRepeticionesMin').value),
+                cantRepeticionesMax: parseInt(document.getElementById('cantRepeticionesMax').value),
+                descansoMinutosMin: parseFloat(document.getElementById('descansoMinutosMin').value),
+                descansoMinutosMax: parseFloat(document.getElementById('descansoMinutosMax').value),
+                musculo: document.getElementById('musculo').value,
+                urlimgejercicio: document.getElementById('urlimgejercicio').value,
+            };
+
+            fetch(`http://localhost:8080/api/ejercicios/updateEjercicio/${ejercicioId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(ejercicioData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Ejercicio actualizado con éxito');
+                    window.location.href = 'ejercicios.html'; // Redirige a la página de ejercicios
+                } else {
+                    console.log('Error al actualizar el ejercicio');
+                }
+            })
+            .catch(error => {
+                console.error('Error en la solicitud:', error);
+                console.log('No se registran cambios en el ejercicio.');
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Producto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .card {
+            background-color: white;
+            padding: 20px;
+            margin: 0 auto;
+            border-radius: 10px;
+            max-width: 800px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card img {
+            width: 150px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: block;
+            margin: 0 auto; /* Márgenes automáticos a los lados */
+        }
+        .card h2 {
+            text-align: center;
+        }
+        .card p {
+            margin: 10px 5px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .buttons a {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .buttons a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img id="imagen-producto" src="" alt="Imagen del producto">
+        <h2 id="nombre-producto">Nombre del Producto</h2>
+        <p><strong>Tipo de Producto:</strong> <span id="tipo-producto"></span></p>
+        <p><strong>Marca:</strong> <span id="marca"></span></p>
+        <p><strong>Descripción:</strong> <span id="descripcion"></span></p>
+        <p><strong>Stock disponible:</strong> <span id="stock"></span></p>
+        <p><strong>Precio:</strong> $<span id="precio"></span></p>
+
+        <div class="buttons">
+            <a onclick="window.location.href='productos.html'">Volver</a>
+            <a onclick="window.location.href='admincontrolpanel.html'">Regresar al Panel</a>
+            <a id="btn-pagar" href="#">Editar producto</a>
+        </div>
+    </div>
+
+    <script>
+        // Obtener el parámetro ID de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+
+        // Cargar datos del producto desde el servidor
+        fetch(`http://localhost:8080/api/productos/buscarProductoId/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("imagen-producto").src = data.imgUrl;
+                document.getElementById("nombre-producto").textContent = data.nombreProducto;
+                document.getElementById("tipo-producto").textContent = data.tipoDeProducto;
+                document.getElementById("marca").textContent = data.marca;
+                document.getElementById("descripcion").textContent = data.descripcion;
+                document.getElementById("stock").textContent = data.stock;
+                document.getElementById("precio").textContent = data.precio;
+            });
+
+        // Actualizar el botón para realizar la compra con el enlace de pago
+        document.getElementById("btn-pagar").href = `productoeditar.html?id=${id}`;
+    </script>
+
+</body>
+</html>

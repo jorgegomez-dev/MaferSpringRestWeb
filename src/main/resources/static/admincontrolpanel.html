@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Administrador</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(to right, #0056b3, #007BFF);
+            padding: 20px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            max-width: 800px;
+            min-height: auto;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 123, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        button {
+            width: 100%;
+            max-width: 500px;
+            padding: 18px 25px;
+            font-size: 18px;
+            font-weight: 500;
+            text-align: center;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .a-button {
+            background: linear-gradient(145deg, #007BFF, #0056b3);
+        }
+
+        .a-button:hover {
+            background: linear-gradient(145deg, #0056b3, #004494);
+        }
+
+        .b-button {
+            background: linear-gradient(145deg, #ff9900, #ff7600);
+        }
+
+        .b-button:hover {
+            background: linear-gradient(145deg, #ff7600, #ff5500);
+        }
+
+        .c-button {
+            background: linear-gradient(145deg, #0aac60, #088f4f);
+        }
+
+        .c-button:hover {
+            background: linear-gradient(145deg, #088f4f, #067040);
+        }
+
+        .logout-button {
+            background: linear-gradient(145deg, #dc3545, #c82333);
+            margin-top: 10px;
+        }
+
+        .logout-button:hover {
+            background: linear-gradient(145deg, #c82333, #bd2130);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 15px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+
+<script>
+    let isLoggingOut = false;
+
+    // Función para obtener los parámetros de la URL
+    function getParams() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const session = params.get('session');
+        if (id && session) {
+            localStorage.setItem('id', id);
+            localStorage.setItem('session', session);
+        }
+    }
+
+    // Función para redirigir sin pasar los parámetros en la URL
+function redirectTo(page) {
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+    
+    // Verificamos que ambos parámetros existan en localStorage
+    if (id && session) {
+        // Redireccionamos a la página sin pasar los parámetros por URL
+        window.location.href = page;
+    } else {
+        console.error("ID o Session no están disponibles en localStorage.");
+        // Aquí podrías redirigir al login o mostrar un error
+        window.location.href = 'login.html';
+    }
+}
+
+    function logout() {
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+
+    if (id && session) {
+        // Aquí ajustas la URL para enviar los parámetros como query string
+        fetch(`http://localhost:8080/api/autenticacion/logout?id=${id}&session=${session}`, {
+            method: 'GET'
+        })
+        .then(response => {
+            if (response.ok) {
+                localStorage.removeItem('id');
+                localStorage.removeItem('session');
+                window.location.href = 'login.html';
+            } else {
+                console.error('Error al cerrar sesión:', response.status);
+                console.log('Error al cerrar sesión. Por favor, intenta de nuevo.');
+            }
+        })
+        .catch(error => {
+            console.error('Error de red:', error);
+            console.log('No se pudo conectar al servidor. Por favor, intenta de nuevo.');
+        });
+    } else {
+        window.location.href = 'login.html';
+    }
+}
+
+    // Función para desactivar el beforeunload temporalmente al navegar
+    function disableBeforeUnload() {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+    }
+
+    // Función para manejar el evento beforeunload
+    function handleBeforeUnload(event) {
+        if (!isLoggingOut) {
+            logout();
+        }
+        event.preventDefault();
+        event.returnValue = '';
+    }
+
+    // Evento beforeunload para logout al cerrar la pestaña o navegador
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    window.onload = function() {
+        getParams();
+    }
+</script>
+</head>
+
+<body>
+    <div class="header">
+        <h1 style="color: white;">Panel de Control - Administrador</h1>
+    </div>
+
+    <div class="container">
+        <h1>Gestión de Usuarios y Actividades</h1>
+        <div class="button-container">
+            <button class="a-button" onclick="disableBeforeUnload(); redirectTo('usuarios.html');">Gestionar Usuarios</button>
+            <button class="a-button" onclick="disableBeforeUnload(); redirectTo('ejercicios.html');">Gestionar Ejercicios</button>
+            <button class="a-button" onclick="disableBeforeUnload(); redirectTo('dias.html');">Gestionar Días Entrenamiento</button>
+            <button class="a-button" onclick="disableBeforeUnload(); redirectTo('rutinas.html');">Gestionar Rutinas</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Gestión de Productos y Pedidos</h1>
+        <div class="button-container">
+            <button class="b-button" onclick="disableBeforeUnload(); redirectTo('asesorias.html');">Gestionar Asesorias de Entrenamiento</button>
+            <button class="b-button" onclick="disableBeforeUnload(); redirectTo('productos.html');">Gestionar Productos</button>
+            <button class="b-button" onclick="disableBeforeUnload(); redirectTo('pedidos.html');">Gestionar Pedidos</button>           
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Cerrar sesión</h1>
+        <div class="button-container">
+            <!--<button class="c-button" onclick="disableBeforeUnload(); redirectTo('estadisticas.html');">VER ESTADISTICAS</button> -->   
+            <button class="logout-button" onclick="logout()">SALIR</button>     
+        </div>
+    </div>
+
+</body>
+</html>

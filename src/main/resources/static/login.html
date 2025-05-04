@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 95%;
+            padding: 10px 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .register-link {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+        }
+        #error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+
+        /*Nuevos estilso*/
+        body {
+    margin: 0;
+    padding: 0;
+}
+
+.custom-form-control {
+    border: 1px solid #e0e0e0;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.custom-form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    border-color: #0d6efd;
+}
+
+.btn-transparent {
+    background: transparent;
+    padding: 0.75rem 1rem;
+}
+
+.btn-transparent:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary {
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .container-fluid {
+        padding: 2rem !important;
+    }
+}
+    </style>
+</head>
+
+<body class="bg-light vh-100 vw-100 overflow-hidden"></body>
+    <div class="container-fluid h-100 p-0">
+        <div class="row h-100 m-0">
+            <div class="col-md-6 col-lg-4 h-100 bg-white p-0 d-flex align-items-center">
+                <div class="w-100 px-4 px-lg-5">
+                    <div class="text-center mb-4">
+                        <h4 class="fw-bold">Bienvenido</h4>
+                        <p class="text-muted">Ingresa tus credenciales para continuar</p>
+                    </div>
+                    <form id="loginForm" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Usuario</label>
+                            <input type="text" class="form-control form-control-lg custom-form-control"  id="username" name="username" required placeholder="Ingresa tu usuario" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <div class="position-relative">
+                                <input type="password" class="form-control form-control-lg custom-form-control" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+                               <!--  <button class="btn btn-transparent border-0 position-absolute top-50 end-0 translate-middle-y" type="button" id="togglePassword">
+                                  <i class="bi bi-eye"></i> 
+                                </button>--> 
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="form-control form-control-lg custom-form-control btn btn-primary">Iniciar Sesión</button>
+                        </div>
+                        <div class="text-center mt-4">
+                            <a href="registrarse.html" class="text-decoration-none">¿No tienes una cuenta? Regístrate aquí</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-8 h-100 bg-primary d-none d-md-flex align-items-center justify-content-center">
+                <div class="text-white text-center">
+                    <h2 class="fw-bold mb-4">¡Bienvenido a Mafer!</h2>
+                    <p class="lead">Accede a todas nuestros servicios</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("togglePassword").addEventListener("click", function() {
+            const passwordInput = document.getElementById("password");
+            const icon = this.querySelector("i");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
+            }
+        });
+    </script>
+</body>
+
+<body>
+    <!--  <div class="login-container">
+        <h2>Login</h2>
+        <!-- Mensaje de error -->
+      <!--   <div id="error-message"></div>
+        
+        <form id="loginForm" method="post">
+            <label for="username">Usuario:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+
+        <a href="registrarse.html" class="register-link">¿No tienes una cuenta? Regístrate aquí</a>
+    </div>-->
+
+    <script>
+document.getElementById('loginForm').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Evitar el envío normal del formulario
+
+    const formData = new FormData(this);
+    
+    // Realizar la petición al servidor
+    const response = await fetch('http://localhost:8080/api/autenticacion/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams(formData),
+        credentials: 'same-origin' // Enviar las cookies de sesión
+    });
+
+    const errorMessageDiv = document.getElementById('error-message');
+    
+    if (response.ok) {
+        const redirectUrl = await response.text();
+        console.log(redirectUrl); // Depuración: Verificar URL devuelta
+        window.location.href = redirectUrl; // Redirigir a la URL devuelta por el servidor
+    } else {
+        const errorMessage = await response.text();
+        errorMessageDiv.textContent = errorMessage; // Mostrar mensaje de error en el div
+    }
+});
+    </script>
+</body>
+</html>

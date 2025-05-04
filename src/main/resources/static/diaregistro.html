@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Día de Ejercicio</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+            cursor: pointer;
+        }
+
+        select option {
+            padding: 12px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 5px;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: calc(33% - 10px);
+            background-color: #3498db;
+        }
+
+        button[type="submit"] {
+            background-color: #27ae60;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button[type="submit"]:hover {
+            background-color: #219a52;
+        }
+
+        .add-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Estilos para campos requeridos */
+        input:required, select:required {
+            border-left: 3px solid #3498db;
+        }
+
+        /* Estilos para campos con error */
+        input:invalid:not(:placeholder-shown),
+        select:invalid:not(:placeholder-shown) {
+            border-color: #e74c3c;
+        }
+
+        /* Grupos de ejercicios */
+        .form-group {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        /* Estilos para placeholder */
+        input::placeholder,
+        select::placeholder {
+            color: #95a5a6;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            form {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            h2 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Efectos hover */
+        input:hover:not(:disabled), 
+        select:hover:not(:disabled) {
+            border-color: #3498db;
+        }
+
+        /* Estilos para campos deshabilitados */
+        input:disabled,
+        select:disabled {
+            background-color: #f8f9fa;
+            border-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        /* Contenedor de botones */
+        form > button:last-child {
+            margin-top: 20px;
+        }
+
+        /* Estilos para selects vacíos */
+        select:invalid {
+            color: #95a5a6;
+        }
+
+        /* Mejora visual para los grupos de ejercicios */
+        select + label {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Registro de Día de Ejercicio</h2>
+    <form id="registroDiaForm">
+
+        <label for="nombreDia">Nombre del Día:</label><br>
+        <input type="text" id="nombreDia" name="nombreDia" required><br><br>
+
+        <label for="sexo">Sexo:</label><br>
+        <select id="sexo" name="sexo" required>
+            <option value="">Seleccione un sexo</option>
+            <option value="Hombre">Hombre</option>
+            <option value="Mujer">Mujer</option>
+        </select><br><br>
+
+        <label for="ejercicioUno">Ejercicio 1:</label><br>
+        <select id="ejercicioUno" name="ejercicioUno">
+            <option value="">Seleccione un ejercicio de la lista o deje vacío</option>
+        </select><br><br>
+
+        <label for="ejercicioDos">Ejercicio 2:</label><br>
+        <select id="ejercicioDos" name="ejercicioDos">
+            <option value="">Seleccione un ejercicio de la lista o deje vacío</option>
+        </select><br><br>
+
+        <label for="ejercicioTres">Ejercicio 3:</label><br>
+        <select id="ejercicioTres" name="ejercicioTres">
+            <option value="">Seleccione un ejercicio de la lista o deje vacío</option>
+        </select><br><br>
+
+        <label for="ejercicioCuatro">Ejercicio 4:</label><br>
+        <select id="ejercicioCuatro" name="ejercicioCuatro">
+            <option value="">Seleccione un ejercicio de la lista o deje vacío</option>
+        </select><br><br>
+
+        <label for="ejercicioCinco">Ejercicio 5:</label><br>
+        <select id="ejercicioCinco" name="ejercicioCinco">
+            <option value="">Seleccione un ejercicio de la lista o deje vacío</option>
+        </select><br><br>
+
+        <label for="ejercicioSeis">Ejercicio 6:</label><br>
+        <select id="ejercicioSeis" name="ejercicioSeis">
+            <option value="">Seleccione un ejercicio de la lista o deje vacío</option>
+        </select><br><br>
+
+        <label for="ejercicioSiete">Ejercicio 7:</label><br>
+        <select id="ejercicioSiete" name="ejercicioSiete">
+            <option value="">Seleccione un ejercicio de la lista o deje vacío</option>
+        </select><br><br>
+
+        <label for="ejercicioOcho">Ejercicio 8:</label><br>
+        <select id="ejercicioOcho" name="ejercicioOcho">
+            <option value="">Seleccione un ejercicio de la lista o deje vacío</option>
+        </select><br><br>
+
+        <label for="ejercicioNueve">Ejercicio 9:</label><br>
+        <select id="ejercicioNueve" name="ejercicioNueve">
+            <option value="">Seleccione un ejercicio de la lista o deje vacío</option>
+        </select><br><br>
+
+        <label for="ejercicioDiez">Ejercicio 10:</label><br>
+        <select id="ejercicioDiez" name="ejercicioDiez">
+            <option value="">Seleccione un ejercicio de la lista o deje vacío</option>
+        </select><br><br>
+
+        <button type="submit">Registrar Día</button>
+        <button class="add-button" type="button" onclick="window.location.href='dias.html'">Volver</button>
+        <button class="add-button" type="button" onclick="window.location.href='admincontrolpanel.html'">Regresar al Panel</button>
+
+    </form>
+
+    <script>
+        async function validarSession() {
+            const id = localStorage.getItem('id');
+            const session = localStorage.getItem('session');
+
+            if (!id || !session) {
+                window.location.href = '/login.html';
+                return false;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8080/api/autenticacion/validarSession', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'id': id,
+                        'session': session
+                    }
+                });
+
+                if (response.ok) return true;
+                else {
+                    localStorage.removeItem('id');
+                    localStorage.removeItem('session');
+                    window.location.href = '/login.html';
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error al validar la sesión:', error);
+                return false;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            validarSession();
+            document.getElementById('sexo').addEventListener('change', cargarEjercicios);
+        });
+
+        function cargarEjercicios() {
+            const sexo = document.getElementById('sexo').value;
+            if (!sexo) return;  // No hacer nada si no se ha seleccionado un sexo
+
+            fetch(`http://localhost:8080/api/ejercicios/listarEjerciciosPorSexo${sexo}`)
+                .then(response => response.json())
+                .then(data => {
+                    const selects = [
+                        document.getElementById('ejercicioUno'),
+                        document.getElementById('ejercicioDos'),
+                        document.getElementById('ejercicioTres'),
+                        document.getElementById('ejercicioCuatro'),
+                        document.getElementById('ejercicioCinco'),
+                        document.getElementById('ejercicioSeis'),
+                        document.getElementById('ejercicioSiete'),
+                        document.getElementById('ejercicioOcho'),
+                        document.getElementById('ejercicioNueve'),
+                        document.getElementById('ejercicioDiez')
+                    ];
+
+                    selects.forEach(select => {
+                        select.innerHTML = '<option value="">Seleccione un ejercicio de la lista o deje vacío</option>';
+                        data.forEach(ejercicio => {
+                            const option = document.createElement('option');
+                            option.value = ejercicio.id;
+                            option.text = ejercicio.nombreEjercicio;
+                            select.appendChild(option);
+                        });
+                    });
+                })
+                .catch(error => console.error('Error al cargar ejercicios:', error));
+        }
+
+        document.getElementById('registroDiaForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const data = {};
+
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            fetch('http://localhost:8080/api/dias/crearDia', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Día registrado con éxito');
+                    window.location.href = 'dias.html';
+                } else {
+                    console.log('Hubo un error al registrar el día.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+
+</body>
+</html>

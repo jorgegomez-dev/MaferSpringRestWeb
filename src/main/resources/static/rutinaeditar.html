@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Rutina</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+            cursor: pointer;
+        }
+
+        select option {
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 5px;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: calc(33% - 10px);
+            background-color: #3498db;
+        }
+
+        button[type="submit"] {
+            background-color: #27ae60;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button[type="submit"]:hover {
+            background-color: #219a52;
+        }
+
+        .add-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Estilos para campos con error */
+        input:invalid:not(:placeholder-shown),
+        select:invalid:not(:placeholder-shown) {
+            border-color: #e74c3c;
+        }
+
+        /* Grupos de días */
+        .form-group {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Estilos para placeholder */
+        input::placeholder,
+        select::placeholder {
+            color: #95a5a6;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            form {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            h1 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Efectos hover */
+        input:hover:not(:disabled), 
+        select:hover:not(:disabled) {
+            border-color: #3498db;
+        }
+
+        /* Estilos para campos deshabilitados */
+        input:disabled,
+        select:disabled {
+            background-color: #f8f9fa;
+            border-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        /* Mejora visual para los grupos de días */
+        select + label {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Estilo para el primer día */
+        label[for="diaUno"] {
+            margin-top: 30px;
+            font-weight: 600;
+            color: #2c3e50;
+            padding-top: 20px;
+        }
+
+        /* Sección de información básica */
+        label[for="nombreRutina"],
+        label[for="sexo"] {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* Contenedor de botones al final del formulario */
+        form > button {
+            margin-top: 30px;
+        }
+
+        /* Estilos para selects vacíos */
+        select:invalid {
+            color: #95a5a6;
+        }
+
+        /* Estilo para opciones deshabilitadas */
+        select option[disabled] {
+            color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Editar Rutina de Días</h1>
+
+    <form id="editRutinaForm">
+        <label for="nombreRutina">Nombre de la Rutina:</label>
+        <input type="text" id="nombreRutina" name="nombreRutina" required>
+
+        <label for="sexo">Sexo:</label>
+        <select id="sexo" name="sexo" required>
+            <option value="" disabled selected>Selecciona el sexo</option>
+            <option value="Hombre">Hombre</option>
+            <option value="Mujer">Mujer</option>
+        </select>
+
+        <!-- Agregado una opción "Sin día asignado" -->
+        <label for="diaUno">Día 1:</label>
+        <select id="diaUno" name="diaUno">
+            <option value="">Sin día asignado</option>
+        </select>
+
+        <label for="diaDos">Día 2:</label>
+        <select id="diaDos" name="diaDos">
+            <option value="">Sin día asignado</option>
+        </select>
+
+        <label for="diaTres">Día 3:</label>
+        <select id="diaTres" name="diaTres">
+            <option value="">Sin día asignado</option>
+        </select>
+
+        <label for="diaCuatro">Día 4:</label>
+        <select id="diaCuatro" name="diaCuatro">
+            <option value="">Sin día asignado</option>
+        </select>
+
+        <label for="diaCinco">Día 5:</label>
+        <select id="diaCinco" name="diaCinco">
+            <option value="">Sin día asignado</option>
+        </select>
+
+        <label for="diaSeis">Día 6:</label>
+        <select id="diaSeis" name="diaSeis">
+            <option value="">Sin día asignado</option>
+        </select>
+
+        <label for="diaSiete">Día 7:</label>
+        <select id="diaSiete" name="diaSiete">
+            <option value="">Sin día asignado</option>
+        </select>
+
+        <button type="submit">Guardar Cambios</button>
+        <button class="add-button" onclick="window.location.href='rutinas.html'">Volver</button>
+        <button class="add-button" onclick="window.location.href='admincontrolpanel.html'">Regresar al Panel</button>
+    </form>
+
+    <script>
+
+        // Desde aca es el mismo codigo para todas las paginas de la app, con las funciones necesarias para
+        // solicitar las validaciones correspondientes, el almacenamiento, la carga de id y session, y la informacion
+        // servida para la siguiente pagina en localStorage()
+        //-----------------------------------------------------------------------------------------------------------
+
+    async function validarSession() {
+        // Obtén el id y la sesión de localStorage
+        const id = localStorage.getItem('id');
+        const session = localStorage.getItem('session');
+
+        if (!id || !session) {
+            console.warn('ID o sesión no disponibles');
+            window.location.href = '/login.html'; // Redirige al login si no están presentes
+            return false; // La sesión no es válida
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/autenticacion/validarSession', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'id': id,
+                    'session': session
+                }
+            });
+
+            if (response.ok) {
+                return true; // La sesión es válida
+            } else if (response.status === 401) {
+                console.warn('Sesión inválida o expirada');
+                // Borra el id y la sesión de localStorage
+                localStorage.removeItem('id');
+                localStorage.removeItem('session');
+                // Redirige al usuario a la página de login
+                window.location.href = '/login.html'; // Cambia esto a tu ruta de login
+                return false;
+            } else {
+                console.error('Error al validar la sesión:', response.statusText);
+                return false; // Otros errores
+            }
+        } catch (error) {
+            console.error('Error al validar la sesión:', error);
+            return false; // Error al validar
+        }
+    }
+
+    // Ejecuta la validación de sesión al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+        validarSession(); // Verifica la sesión al cargar cualquier página
+    });
+
+        // Hasta aca es el mismo codigo para todas las paginas de la app, con las funciones necesarias para
+        // solicitar las validaciones correspondientes, el almacenamiento, la carga de id y session, y la informacion
+        // servida para la siguiente pagina.
+        //-----------------------------------------------------------------------------------------------------------
+
+        // Obtener el ID de la rutina desde la URL
+        const params = new URLSearchParams(window.location.search);
+        const idRutinaActual = params.get('id');
+
+        // Función para cargar los días en los select
+        function cargarDias() {
+            return fetch('http://localhost:8080/api/dias/listarDias')
+                .then(response => response.json())
+                .then(dias => {
+                    const selects = [
+                        'diaUno', 'diaDos', 'diaTres',
+                        'diaCuatro', 'diaCinco', 'diaSeis', 'diaSiete'
+                    ];
+
+                    selects.forEach(selectId => {
+                        const selectElement = document.getElementById(selectId);
+
+                        // Añadir opciones de días disponibles
+                        dias.forEach(dia => {
+                            const option = document.createElement('option');
+                            option.value = dia.id;
+                            option.textContent = dia.nombreDia;
+                            selectElement.appendChild(option);
+                        });
+                    });
+                })
+                .catch(error => console.error('Error al cargar los días:', error));
+        }
+
+        // Función para cargar los datos de la rutina
+        function cargarDatosRutina(idRutinaActual) {
+            fetch(`http://localhost:8080/api/rutinas/buscarRutinaId/${idRutinaActual}`)
+                .then(response => response.json())
+                .then(rutina => {
+                    document.getElementById('nombreRutina').value = rutina.nombreRutina || '';
+                    document.getElementById('sexo').value = rutina.sexo || '';
+
+                    // Precargar días en los combobox
+                    document.getElementById('diaUno').value = rutina.diaUno || '';
+                    document.getElementById('diaDos').value = rutina.diaDos || '';
+                    document.getElementById('diaTres').value = rutina.diaTres || '';
+                    document.getElementById('diaCuatro').value = rutina.diaCuatro || '';
+                    document.getElementById('diaCinco').value = rutina.diaCinco || '';
+                    document.getElementById('diaSeis').value = rutina.diaSeis || '';
+                    document.getElementById('diaSiete').value = rutina.diaSiete || '';
+                })
+                .catch(error => console.error('Error al cargar los datos de la rutina:', error));
+        }
+
+        // Cargar los datos de la rutina y los días disponibles al iniciar
+        if (idRutinaActual) {
+            cargarDias().then(() => {
+                cargarDatosRutina(idRutinaActual);
+            });
+        } else {
+            alert('ID de la rutina no encontrado.');
+        }
+
+        // Manejar la actualización de la rutina
+        document.getElementById('editRutinaForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const rutinaData = {
+                nombreRutina: document.getElementById('nombreRutina').value,
+                sexo: document.getElementById('sexo').value,
+                diaUno: document.getElementById('diaUno').value || null,
+                diaDos: document.getElementById('diaDos').value || null,
+                diaTres: document.getElementById('diaTres').value || null,
+                diaCuatro: document.getElementById('diaCuatro').value || null,
+                diaCinco: document.getElementById('diaCinco').value || null,
+                diaSeis: document.getElementById('diaSeis').value || null,
+                diaSiete: document.getElementById('diaSiete').value || null
+            };
+
+            // Fetch correcto para actualizar la rutina
+            fetch(`http://localhost:8080/api/rutinas/updateRutina/${idRutinaActual}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(rutinaData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Rutina actualizada con éxito');
+                    window.location.href = 'rutinas.html'; // Redirige a la página de días
+                } else {
+                    console.log('Error al actualizar la rutina');
+                }
+            })
+            .catch(error => {
+                console.error('Error en la solicitud:', error);
+                console.log('No se registran cambios en la rutina.');
+            });
+        });
+    </script>
+
+</body>
+</html>

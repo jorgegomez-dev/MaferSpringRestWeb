@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Pedidos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 5px;
+            border: none;
+            color: white;
+            background-color: #007BFF;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .add-button {
+            margin-bottom: 20px;
+        }
+
+        .delete-button {
+            background-color: red;
+        }
+
+        .delete-button:hover {
+            background-color: darkred;
+        }
+
+        .edit-button {
+            background-color: orange;
+        }
+
+        .edit-button:hover {
+            background-color: darkorange;
+        }
+
+        .view-button {
+            background-color: green;
+        }
+
+        .view-button:hover {
+            background-color: darkgreen;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Gestión de Pedidos (Panel de Administrador)</h1>
+
+    <!-- Botón para agregar pedidos y regresar al panel de control -->
+    <button class="add-button" onclick="window.location.href='pedidoregistro.html'">Agregar Pedido</button>
+    <button class="add-button" onclick="window.location.href='admincontrolpanel.html'">Regresar al Panel</button>
+
+    <!-- Tabla de pedidos -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID Pedido</th>
+                <th>ID Usuario</th>
+                <th>Productos</th>
+                <th>Precio Total</th>
+                <th>Estado</th>
+                <th>Fecha de Creación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="pedidoTableBody">
+            <!-- Aquí se insertarán los datos de la base de datos -->
+        </tbody>
+    </table>
+
+    <script>
+        // Cargar pedidos desde el servidor con fetch
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch("http://localhost:8080/api/pedidos/listarPedidos")
+                .then(response => response.json())
+                .then(data => {
+                    const pedidoTableBody = document.getElementById("pedidoTableBody");
+
+                    data.forEach(pedido => {
+                        const row = document.createElement("tr");
+
+                        const productos = [
+                            `Producto 1 (ID: ${pedido.idProductoUno}, Cant: ${pedido.cantProductoUno})`,
+                            `Producto 2 (ID: ${pedido.idProductoDos}, Cant: ${pedido.cantProductoDos})`,
+                            `Producto 3 (ID: ${pedido.idProductoTres}, Cant: ${pedido.cantProductoTres})`,
+                            `Producto 4 (ID: ${pedido.idProductoCuatro}, Cant: ${pedido.cantProductoCuatro})`,
+                            `Producto 5 (ID: ${pedido.idProductoCinco}, Cant: ${pedido.cantProductoCinco})`,
+                            `Producto 6 (ID: ${pedido.idProductoSeis}, Cant: ${pedido.cantProductoSeis})`,
+                            `Producto 7 (ID: ${pedido.idProductoSiete}, Cant: ${pedido.cantProductoSiete})`,
+                            `Producto 8 (ID: ${pedido.idProductoOcho}, Cant: ${pedido.cantProductoOcho})`,
+                            `Producto 9 (ID: ${pedido.idProductoNueve}, Cant: ${pedido.cantProductoNueve})`,
+                            `Producto 10 (ID: ${pedido.idProductoDiez}, Cant: ${pedido.cantProductoDiez})`
+                        ].filter(p => !p.includes('undefined')).join(', ');
+
+                        row.innerHTML = 
+                            `<td>${pedido.id}</td>
+                            <td>${pedido.idUsuario}</td>
+                            <td>${productos}</td>
+                            <td>${pedido.precioTotal}</td>
+                            <td>${pedido.estado}</td>
+                            <td>${pedido.createdOn}</td>
+                            <td>
+                                <button class="view-button" onclick="verPedido(${pedido.id})">Ver</button>
+                                <button class="edit-button" onclick="editarPedido(${pedido.id})">Modificar</button>
+                                <button class="delete-button" onclick="eliminarPedido(${pedido.id})">Eliminar</button>
+                            </td>`;
+
+                        pedidoTableBody.appendChild(row);
+                    });
+                });
+        });
+
+        // Función para eliminar un pedido
+        function eliminarPedido(id) {
+            if (confirm("¿Estás seguro de eliminar este pedido?")) {
+                fetch(`http://localhost:8080/api/pedidos/deletePedido/${id}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        console.log("Pedido eliminado correctamente");
+                        location.reload(); // Recargar la página para actualizar la tabla
+                    } else {
+                        console.log("Error al eliminar el pedido");
+                    }
+                });
+            }
+        }
+
+        // Función para editar un pedido
+        function editarPedido(id) {
+            window.location.href = `/pedidoeditar.html?id=${id}`; // Redirige a una página de edición
+        }
+
+        // Función para ver un pedido
+        function verPedido(id) {
+            window.location.href = `/pedidover.html?id=${id}`; // Redirige a la página de detalles del pedido
+        }
+    </script>
+
+</body>
+</html>

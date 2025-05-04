@@ -1,0 +1,349 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+class MaferApplicationWeb
+class AuthController
+class SecurityConfig
+class CustomUserDetailsService
+class UsuarioController
+class EjercicioController
+class DiaController
+class RutinaController
+class PedidoController
+class ProductoController
+class AsesoriaController
+
+class UsuarioServiceImpl
+class EjercicioServiceImpl
+class DiaServiceImpl
+class RutinaServiceImpl
+class PedidoServiceImpl
+class ProductoServiceImpl
+class AsesoriaServiceImpl
+
+interface UsuarioService
+interface EjercicioService
+interface DiaService
+interface RutinaService
+interface PedidoService
+interface ProductoService
+interface AsesoriaService
+
+interface UsuarioRepository
+interface EjercicioRepository
+interface DiaRepository
+interface RutinaRepository
+interface PedidoRepository
+interface ProductoRepository
+interface AsesoriaRepository
+
+class Usuario
+class Ejercicio
+class Dia
+class Rutina
+class Pedido
+class Producto
+class Asesoria
+
+
+MaferApplicationWeb --> AuthController
+AuthController -> SecurityConfig
+SecurityConfig -> CustomUserDetailsService
+AuthController --> UsuarioController
+AuthController --> EjercicioController
+AuthController --> DiaController
+AuthController --> RutinaController
+AuthController --> PedidoController
+AuthController --> ProductoController
+AuthController --> AsesoriaController
+
+UsuarioController --> UsuarioServiceImpl
+EjercicioController --> EjercicioServiceImpl
+DiaController --> DiaServiceImpl
+RutinaController --> RutinaServiceImpl
+PedidoController --> PedidoServiceImpl
+ProductoController --> ProductoServiceImpl
+AsesoriaController --> AsesoriaServiceImpl
+
+ValidacionesServiceImpl <- AuthController
+
+UsuarioServiceImpl <- Usuario
+EjercicioServiceImpl --> Ejercicio
+DiaServiceImpl --> Dia
+RutinaServiceImpl --> Rutina
+PedidoServiceImpl --> Pedido
+ProductoServiceImpl --> Producto
+AsesoriaServiceImpl --> Asesoria
+
+UsuarioRepository <- UsuarioServiceImpl
+EjercicioRepository <- EjercicioServiceImpl
+DiaRepository <- DiaServiceImpl
+RutinaRepository <- RutinaServiceImpl
+PedidoRepository <- PedidoServiceImpl
+ProductoRepository <- ProductoServiceImpl
+AsesoriaRepository <- AsesoriaServiceImpl
+
+class MaferApplicationWeb {
++ public static void main(String[] args);
+          }
+
+class AuthController {
+    + ResponseEntity<?> login(String username, String password)
+    + ResponseEntity<?> logout(Long id,  Integer session)
+    + ResponseEntity<?> validarSession(String id, String session)
+}
+
+class UsuarioController {
+
+}
+
+
+
+class Usuario {
+    - private Long id;
+    - private String nombre;
+    - private String apellido;
+    - private String email;
+    - private String telefono;
+    - private String username;
+    - private String password;
+    - private String role;
+    - private Double peso;
+    - private Double altura;
+    - private Double imc;
+    - private String sexo;
+    - private Long idRutinaActual;
+    - private LocalDate fechaInicioRutina
+    - private String urlfotoperfil;
+    - private LocalDateTime createdOn;
+    - private LocalDateTime updatedOn;
+    - private LocalDate birthdate;
+    - private Integer edad;
+    - private Long idAsesoriaActual;
+    - private LocalDate fechaInicioAsesoria;
+    - private LocalDate fechaFinAsesoria;
+    - private boolean Authenticated = false;
+    - private Integer session;
+
+    + getters()
+    + setters()
+    }
+
+class Asesoria {
+
+    - private Long id;
+    - private String nombreAsesoria;
+    - private String tipoAsesoria;
+    - private String pdfUrl;
+    - private Double precio;
+    - private String imgUrl;
+    - private String linkPago;
+
+    + getters()
+    + setters()
+}
+
+class Dia {
+
+    - private Long id;
+    - private String nombreDia;
+    - private String sexo;
+    - private Long ejercicioUno;
+    - private Long ejercicioDos;
+    - private Long ejercicioTres;
+    - private Long ejercicioCuatro;
+    - private Long ejercicioCinco;
+    - private Long ejercicioSeis;
+    - private Long ejercicioSiete;
+    - private Long ejercicioOcho;
+    - private Long ejercicioNueve;
+    - private Long ejercicioDiez;
+
+    + getters()
+    + setters()
+}
+
+class Ejercicio {
+
+    - private Long id;
+    - private String nombreEjercicio;
+    - private String sexo;
+    - private Integer cantSeriesMin;
+    - private Integer cantSeriesMax;
+    - private Integer cantRepeticionesMin;
+    - private Integer cantRepeticionesMax;
+    - private Integer descansoMinutosMin;
+    - private Integer descansoMinutosMax;
+    - private String musculo;
+    - private String urlimgejercicio;
+
+    + getters()
+    + setters()
+}
+
+class Pedido {
+
+    - private Long id;
+    - private Long idUsuario;
+    - private Long idProductoUno;
+    - private Integer cantProductoUno;
+    - private Long idProductoDos;
+    - private Integer cantProductoDos;
+    - private Long idProductoTres;
+    - private Integer cantProductoTres;
+    - private Long idProductoCuatro;
+    - private Integer cantProductoCuatro;
+    - private Long idProductoCinco;
+    - private Integer cantProductoCinco;
+    - private Long idProductoSeis;
+    - private Integer cantProductoSeis;
+    - private Long idProductoSiete;
+    - private Integer cantProductoSiete;
+    - private Long idProductoOcho;
+    - private Integer cantProductoOcho;
+    - private Long idProductoNueve;
+    - private Integer cantProductoNueve;
+    - private Long idProductoDiez;
+    - private Integer cantProductoDiez;
+    - private Double precioTotal;
+    - private String estado = "activo";
+    - private LocalDateTime createdOn;
+
+    + getters()
+    + setters()
+}
+
+class Producto {
+
+    - private Long id;
+    - private String nombreProducto;
+    - private String tipoDeProducto;
+    - private String marca;
+    - private String descripcion;
+    - private Integer stock;
+
+    - private Double precio;
+    - private String imgUrl;
+    - private String linkPago;
+
+    + getters()
+    + setters()
+}
+
+class Rutina {
+
+    - private Long id;
+    - private String nombreRutina;
+    - private String sexo;
+    - private Long diaUno;
+    - private Long diaDos;
+    - private Long diaTres;
+    - private Long diaCuatro;
+    - private Long diaCinco;
+    - private Long diaSeis;
+    - private Long diaSiete;
+    - private LocalDateTime createdOn;
+    - private LocalDateTime updatedOn;
+
+    + getters()
+    + setters()
+
+}
+
+class SecurityConfig {
+    + public SecurityFilterChain (HttpSecurity);
+    + public AuthenticationManager (AuthenticationConfiguration);
+    + public PasswordEncoder passwordEncoder();
+}
+
+class CustomUserDetailsService implements UserDetailsService{
+    + public UserDetails (String)
+}
+
+class AsesoriaServiceImpl implements AsesoriaService {
+    + public List<Asesoria> findAllAsesorias()
+    + public Asesoria crearAsesoria(Asesoria)
+    + public Asesoria findAsesoriaById(Long)
+    + public Asesoria actualizarAsesoria(Asesoria)
+    + public Boolean deleteAsesoria(Long)
+
+}
+
+class DiaServiceImpl implements DiaService {
+    + public List<Dia> findAllDias()
+    + public Dia crearDia(Dia)
+    + public Dia findDiaById(Long)
+    + public Dia actualizarDia(Dia)
+    + public Boolean deleteDia(Long)
+}
+
+class EjercicioServiceImpl implements EjercicioService {
+    + public List<Ejercicio> findAllUsuarios()
+    + public Ejercicio crearEjercicio(Ejercicio)
+    + public Ejercicio actualizarEjercicio(Ejercicio)
+    + public Boolean deleteEjercicio(Long)
+}
+
+class PedidoServiceImpl implements PedidoService {
+    + public List<Pedido> findAllPedidos()
+    + public List<Pedido> findAllPedidosActivos()
+    + public List<Pedido> findAllPedidosActivosByIdUsuario(Long)
+    + public Pedido crearPedido(Pedido)
+    + public Pedido findPedidoById(Long)
+    + public List<Pedido> findAllPedidosByIdUsuario(Long)
+}
+
+class ProductoServiceImpl implements ProductoService {
+    + public List<Producto> findAllProductos()
+    + public List<Producto> findAllProductosPorNombre(String)
+    + public List<Producto> findAllProductosPorMarca(String)
+    + public List<Producto> findAllProductosPorTipo(String)
+    + public Producto crearProducto(Producto)
+    + public Producto findProductoById(Long)
+    + public Producto actualizarProducto(Producto)
+    + public Producto actualizarStock(Long, Integer)
+}
+
+class RutinaServiceImpl implements RutinaService {
+    + public List<Rutina> findAllRutinas()
+    + public Rutina crearRutina(Rutina)
+    + public Rutina findRutinaById(Long)
+    + public Rutina actualizarRutina(Rutina)
+    + public Boolean deleteRutina(Long)
+}
+
+class UsuarioServiceImpl implements UsuarioService {
+    + public List<Usuario> findAllUsuarios()
+    + public List<Usuario> findAllUsuariosPorNombre(String)
+    + public List<Usuario> findAllUsuariosPorApellido(String)
+    + public List<Usuario> findAllUsuariosPorSexo(String)
+    + public List<Usuario> findAllUsuariosPorRol(String)
+    + public List<Usuario> findAllUsuariosPorEmail(String)
+    + public List<Usuario> findAllUsuariosPorAsesoriaVencida(LocalDate)
+    + public Usuario crearUsuario(Usuario)
+    + public Usuario findUsuarioById(Long)
+    + public Usuario findUsuarioByUsername(String)
+    + public Boolean findUsuarioByUsernameExist(String)
+    + public Boolean findUsuarioByEmailExist(String)
+    + public Usuario actualizarUsuario(Usuario)
+    + public Boolean deleteUsuario(Long)
+    + public Double calcularIMC(Double, Double)
+    + public Integer calcularEdad(LocalDate)
+    + public LocalDate calcularFinAsesoria(LocalDate)
+    + private Usuario mapToUsuario(Usuario)
+}
+
+class ValidacionesServiceImpl implements ValidacionesService {
+    + public Boolean validarSession(String, String)
+    + public int generarSession()
+}
+
+interface AsesoriaRepository{}
+interface DiaRepository{}
+interface EjercicioRepository{}
+interface PedidoRepository{}
+interface ProductoRepository{}
+interface RutinaRepository{}
+interface UsuarioRepository{}
+
+@enduml

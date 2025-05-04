@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuario</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+        }
+
+        input:disabled {
+            background-color: #f8f9fa;
+            border-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        input[type="date"] {
+            padding: 11px;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 5px;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: calc(50% - 10px);
+        }
+
+        button[type="submit"] {
+            background-color: #27ae60;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #219a52;
+            transform: translateY(-2px);
+        }
+
+        .add-button {
+            background-color: #3498db;
+        }
+
+        .add-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para campos numéricos */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            form {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            h1 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+
+            input, select {
+                padding: 10px;
+            }
+        }
+
+        /* Grupos de campos relacionados */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        /* Efectos hover */
+        input:hover:not(:disabled), 
+        select:hover:not(:disabled) {
+            border-color: #3498db;
+        }
+
+        /* Estilos para placeholder */
+        input::placeholder {
+            color: #95a5a6;
+        }
+
+        /* Estilos para campos requeridos */
+        input:required:not(:disabled) {
+            border-left: 3px solid #3498db;
+        }
+
+        /* Estilos para campos con error */
+        input:invalid:not(:placeholder-shown) {
+            border-color: #e74c3c;
+        }
+
+        /* Estilos para el contenedor de botones */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Editar Usuario</h1>
+
+    <form id="editUserForm">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" required>
+
+        <label for="email">Correo Electrónico:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="telefono">Telefono:</label>
+        <input type="number" id="telefono" name="telefono" step="1" required>
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Contraseña (dejar en blanco para no cambiar):</label>
+        <input type="password" id="password" name="password">
+
+        <label for="peso">Peso (kg):</label>
+        <input type="number" id="peso" name="peso" step="0.01" required>
+
+        <label for="altura">Altura (m):</label>
+        <input type="number" id="altura" name="altura" step="0.01" required>
+
+        <label for="sexo">Sexo:</label>
+        <select id="sexo" name="sexo" required>
+            <option value="" disabled selected>Selecciona el sexo</option>
+            <option value="Hombre">Hombre</option>
+            <option value="Mujer">Mujer</option>
+        </select>
+
+        <label for="urlfotoperfil">Foto de Perfil:</label>
+        <input type="text" id="urlfotoperfil" name="urlfotoperfil" required>
+
+        <label for="idRutinaActual">Id Rutina:</label>
+        <input type="number" id="idRutinaActual" name="idRutinaActual" disabled>
+
+        <label for="fechaInicioRutina">Fecha Inicio Rutina:</label>
+        <input type="date" id="fechaInicioRutina" name="fechaInicioRutina" disabled>
+
+        <label for="idAsesoriaActual">Id Asesoría:</label>
+        <input type="number" id="idAsesoriaActual" name="idAsesoriaActual" disabled>
+
+        <label for="fechaInicioAsesoria">Fecha Inicio Asesoría:</label>
+        <input type="date" id="fechaInicioAsesoria" name="fechaInicioAsesoria" disabled>
+
+        <button type="submit">Guardar Cambios</button>
+        <button class="add-button" onclick="window.location.href='miusuario.html'">Volver</button>
+    </form>
+
+    <script>
+        // Obtener el ID y session desde localStorage
+        const userId = localStorage.getItem('id'); // ID del usuario
+        const session = localStorage.getItem('session'); // Session
+
+        // Verificar si se obtuvo el ID del usuario
+        if (!userId) {
+            console.log('No se encontró el ID de usuario.');
+            window.location.href = 'miusuario.html'; // Redirigir si no se encuentra el ID
+        }
+
+        // Función para cargar datos del usuario
+        function cargarDatosUsuario(id) {
+            fetch(`http://localhost:8080/api/usuarios/mostrarUsuarioId`, {
+                method: 'GET',
+                headers: {
+                    'id': id, // Enviar ID en el header
+                    'session': session // Enviar session en el header
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al cargar los datos del usuario');
+                }
+                return response.json();
+            })
+            .then(user => {
+                // Verificar y asignar los valores de los campos
+                document.getElementById('nombre').value = user.nombre || '';
+                document.getElementById('apellido').value = user.apellido || '';
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('telefono').value = user.telefono || 0;
+                document.getElementById('username').value = user.username || '';
+                document.getElementById('password').value = ""; // Campo de contraseña vacío
+                document.getElementById('peso').value = user.peso || 0;
+                document.getElementById('altura').value = user.altura || 0;
+                document.getElementById('sexo').value = user.sexo || '';
+                document.getElementById('urlfotoperfil').value = user.urlfotoperfil || '';
+                document.getElementById('idRutinaActual').value = user.idRutinaActual || 0;
+                document.getElementById('fechaInicioRutina').value = user.fechaInicioRutina || '';
+                document.getElementById('idAsesoriaActual').value = user.idAsesoriaActual || 0;
+                document.getElementById('fechaInicioAsesoria').value = user.fechaInicioAsesoria || '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                console.log('No se pudo cargar el usuario.');
+            });
+        }
+
+        // Cargar los datos del usuario al iniciar
+        cargarDatosUsuario(userId);
+
+        // Manejar la actualización del usuario
+        document.getElementById('editUserForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const userData = {
+                nombre: document.getElementById('nombre').value,
+                apellido: document.getElementById('apellido').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('telefono').value,
+                username: document.getElementById('username').value,
+                password: document.getElementById('password').value.trim() === "" ? null : document.getElementById('password').value, // Enviar null si el campo está vacío
+                peso: parseFloat(document.getElementById('peso').value),
+                altura: parseFloat(document.getElementById('altura').value),
+                sexo: document.getElementById('sexo').value,
+                urlfotoperfil: document.getElementById('urlfotoperfil').value,
+                idRutinaActual: document.getElementById('idRutinaActual').value,
+                fechaInicioRutina: document.getElementById('fechaInicioRutina').value,
+                idAsesoriaActual: document.getElementById('idAsesoriaActual').value,
+                fechaInicioAsesoria: document.getElementById('fechaInicioAsesoria').value,
+            };
+
+            fetch(`http://localhost:8080/api/usuarios/updateUsuario`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'id': userId, // Enviar ID en el header
+                    'session': session // Enviar session en el header
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Usuario actualizado con éxito');
+                    window.location.href = 'usercontrolpanel.html'; // Redirige a la página de usuarios
+                } else {
+                    console.log('Error al actualizar el usuario');
+                }
+            })
+            .catch(error => {
+                console.error('Error en la solicitud:', error);
+                console.log('No se registran cambios en el usuario.');
+            });
+        });
+    </script>
+
+</body>
+</html>

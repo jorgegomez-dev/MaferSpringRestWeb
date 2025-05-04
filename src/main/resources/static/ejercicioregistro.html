@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Ejercicio</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 5px;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: calc(33% - 10px);
+        }
+
+        button[type="submit"] {
+            background-color: #27ae60;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #219a52;
+            transform: translateY(-2px);
+        }
+
+        .add-button {
+            background-color: #3498db;
+        }
+
+        .add-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para campos numéricos */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Estilos para campos requeridos */
+        input:required, select:required {
+            border-left: 3px solid #3498db;
+        }
+
+        /* Estilos para campos con error */
+        input:invalid:not(:placeholder-shown) {
+            border-color: #e74c3c;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            form {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            h2 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Efectos hover */
+        input:hover, select:hover {
+            border-color: #3498db;
+        }
+
+        /* Grupos de campos relacionados */
+        .form-group {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        /* Estilos para placeholder */
+        input::placeholder {
+            color: #95a5a6;
+        }
+
+        /* Estilos para el contenedor de botones */
+        form > button:last-child {
+            margin-top: 20px;
+        }
+
+        /* Estilos para campos de URL */
+        input[type="text"][id="urlimgejercicio"] {
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        /* Estilos para campos de texto largos */
+        input[type="text"] {
+            min-height: 42px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Registro de Ejercicio</h2>
+    <form id="registroEjercicioForm">
+
+        <label for="nombreEjercicio">Nombre del Ejercicio:</label><br>
+        <input type="text" id="nombreEjercicio" name="nombreEjercicio" required><br><br>
+
+        <label for="sexo">Sexo:</label><br>
+        <select id="sexo" name="sexo" required>
+            <option value="">Seleccione un sexo</option>
+            <option value="Hombre">Hombre</option>
+            <option value="Mujer">Mujer</option>
+        </select><br><br>
+
+        <label for="cantSeriesMin">Cantidad de Series Mínimas:</label><br>
+        <input type="number" id="cantSeriesMin" name="cantSeriesMin" required><br><br>
+
+        <label for="cantSeriesMax">Cantidad de Series Máximas:</label><br>
+        <input type="number" id="cantSeriesMax" name="cantSeriesMax" required><br><br>
+
+        <label for="cantRepeticionesMin">Cantidad de Repeticiones Mínimas:</label><br>
+        <input type="number" id="cantRepeticionesMin" name="cantRepeticionesMin" required><br><br>
+
+        <label for="cantRepeticionesMax">Cantidad de Repeticiones Máximas:</label><br>
+        <input type="number" id="cantRepeticionesMax" name="cantRepeticionesMax" required><br><br>
+
+        <label for="descansoMinutosMin">Descanso en Minutos Mínimos:</label><br>
+        <input type="number" id="descansoMinutosMin" name="descansoMinutosMin" required><br><br>
+
+        <label for="descansoMinutosMax">Descanso en Minutos Máximos:</label><br>
+        <input type="number" id="descansoMinutosMax" name="descansoMinutosMax" required><br><br>
+
+        <label for="musculo">Músculo Trabajado:</label><br>
+        <input type="text" id="musculo" name="musculo" required><br><br>
+
+        <label for="urlimgejercicio">URL de la Imagen del Ejercicio:</label><br>
+        <input type="text" id="urlimgejercicio" name="urlimgejercicio"><br><br>
+
+        <button type="submit">Registrar Ejercicio</button>
+        <button class="add-button" type="button" onclick="window.location.href='ejercicios.html'">Volver</button>
+        <button class="add-button" type="button" onclick="window.location.href='admincontrolpanel.html'">Regresar al Panel</button>
+
+    </form>
+
+    <script>
+
+        // Desde aca es el mismo codigo para todas las paginas de la app, con las funciones necesarias para
+        // solicitar las validaciones correspondientes, el almacenamiento, la carga de id y session, y la informacion
+        // servida para la siguiente pagina en localStorage()
+        //-----------------------------------------------------------------------------------------------------------
+
+    async function validarSession() {
+        // Obtén el id y la sesión de localStorage
+        const id = localStorage.getItem('id');
+        const session = localStorage.getItem('session');
+
+        if (!id || !session) {
+            console.warn('ID o sesión no disponibles');
+            window.location.href = '/login.html'; // Redirige al login si no están presentes
+            return false; // La sesión no es válida
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/autenticacion/validarSession', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'id': id,
+                    'session': session
+                }
+            });
+
+            if (response.ok) {
+                return true; // La sesión es válida
+            } else if (response.status === 401) {
+                console.warn('Sesión inválida o expirada');
+                // Borra el id y la sesión de localStorage
+                localStorage.removeItem('id');
+                localStorage.removeItem('session');
+                // Redirige al usuario a la página de login
+                window.location.href = '/login.html'; // Cambia esto a tu ruta de login
+                return false;
+            } else {
+                console.error('Error al validar la sesión:', response.statusText);
+                return false; // Otros errores
+            }
+        } catch (error) {
+            console.error('Error al validar la sesión:', error);
+            return false; // Error al validar
+        }
+    }
+
+    // Ejecuta la validación de sesión al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+        validarSession(); // Verifica la sesión al cargar cualquier página
+    });
+
+        // Hasta aca es el mismo codigo para todas las paginas de la app, con las funciones necesarias para
+        // solicitar las validaciones correspondientes, el almacenamiento, la carga de id y session, y la informacion
+        // servida para la siguiente pagina.
+        //-----------------------------------------------------------------------------------------------------------
+
+        document.getElementById('registroEjercicioForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evitar el envío del formulario estándar
+
+            const formData = new FormData(this);
+            const data = {};
+
+            // Convertir FormData a un objeto JSON
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            fetch('http://localhost:8080/api/ejercicios/crearEjercicio', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'  // Especificar el tipo de contenido
+                },
+                body: JSON.stringify(data)  // Convertir el objeto a JSON
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Ejercicio creado con éxito');
+                    window.location.href = 'ejercicios.html';
+                } else {
+                    console.log('Hubo un error al registrar el ejercicio.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

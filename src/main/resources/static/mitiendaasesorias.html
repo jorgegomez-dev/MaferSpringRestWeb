@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Lista de Asesorías</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 5px;
+            border: none;
+            color: white;
+            background-color: #007BFF;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .add-button {
+            margin-bottom: 20px;
+        }
+
+        .delete-button {
+            background-color: red;
+        }
+
+        .delete-button:hover {
+            background-color: darkred;
+        }
+
+        .edit-button {
+            background-color: orange;
+        }
+
+        .edit-button:hover {
+            background-color: darkorange;
+        }
+
+        .view-button {
+            background-color: green;
+        }
+
+        .view-button:hover {
+            background-color: darkgreen;
+        }
+
+        .product-card {
+    background: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    overflow: hidden;
+    height: 100%;
+}
+.btn-info{
+    color: white;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.image-container:hover .product-image {
+    transform: scale(1.05);
+}
+
+.out-of-stock-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.product-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    height: 2.4em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.stock {
+    color: #7f8c8d;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.cart-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.add-to-cart, .remove-from-cart {
+    flex: 1;
+}
+
+.buy-now {
+    background: #3498db;
+    border: none;
+}
+
+.buy-now:hover {
+    background: #2980b9;
+}
+
+.add-to-cart {
+    background: #2ecc71;
+    border: none;
+}
+
+.add-to-cart:hover {
+    background: #27ae60;
+}
+
+.remove-from-cart {
+    background: #e74c3c;
+    border: none;
+}
+
+.remove-from-cart:hover {
+    background: #c0392b;
+}
+
+@media (max-width: 768px) {
+    .product-card {
+        margin-bottom: 20px;
+    }
+    
+    .cart-buttons {
+        flex-direction: column;
+    }
+
+    .product-image {
+        height: 250px;
+    }
+}
+
+.btn:focus {
+    outline: 3px solid rgba(52, 152, 219, 0.5);
+    outline-offset: 2px;
+}
+
+.spinner-border {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.comprar-btn {
+    top: 5px;
+    height: 100%;
+    background: #29b989;
+    color: white;
+}
+
+.comprar-btn:hover {
+    background: #29b941;
+}
+
+.btn-outline-light.btn-sm {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    margin-right: 12px;
+}
+
+.btn-outline-light.btn-sm:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(-2px);
+}
+
+.btn-outline-light.btn-sm i {
+    font-size: 0.875rem;
+}
+
+    </style>
+</head>
+
+<body>
+
+    <!--NAVBAR-->
+
+    <nav class="navbar navbar-dark bg-primary fixed-top">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-outline-light btn-sm me-3" onclick="window.location.href='usercontrolpanel.html'">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <a class="navbar-brand" href="#">Tienda de Asesorías</a>
+            </div>
+           <!-- <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>-->
+        </div>
+    </nav>
+
+
+
+    <div class="container-fluid py-5" style="margin-top: 50px;">
+        
+        <!--<h1 class="text-center mb-4">Tienda de Asesorías</h1> 
+        
+        <button class="add-button mb-4" onclick="window.location.href='usercontrolpanel.html'">Regresar al Panel</button>-->
+        
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mb-4" id="asesoriaTableBody">
+            <!-- Aquí se insertarán las cards de asesorías -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch("http://localhost:8080/api/asesorias/listarAsesorias")
+                .then(response => response.json())
+                .then(data => {
+                    const asesoriaTableBody = document.getElementById("asesoriaTableBody");
+                    asesoriaTableBody.innerHTML = ''; // Limpia el contenedor
+
+                    data.forEach(asesoria => {
+                        const card = document.createElement("div");
+                        card.className = "col";
+                        
+                        card.innerHTML = `
+                            <div class="product-card">
+                                <div class="image-container">
+                                    <img src="${asesoria.imgUrl}" alt="${asesoria.nombreAsesoria}" class="product-image">
+                                </div>
+                                <div class="product-info p-3">
+                                    <h3 class="product-name">${asesoria.nombreAsesoria}</h3>
+                                    <p class="mb-2 text-muted">${asesoria.tipoAsesoria}</p>
+                                    <div class="price-stock d-flex justify-content-between align-items-center mb-3">
+                                        <span class="price">$${asesoria.precio}</span>
+                                    </div>
+                                    <div class="product-actions mt-3">
+                                        <a href="${asesoria.pdfUrl}" target="_blank" class="btn btn-primary w-100 mb-2">
+                                            <i class="fas fa-file-pdf me-2"></i>Ver PDF
+                                        </a>
+                                        <div class="cart-buttons">
+                                            <a href="${asesoria.linkPago}" target="_blank" class="btn btn-info w-100 comprar-btn">
+                                                <i class="fas fa-shopping-cart me-2"></i>Comprar
+                                            </a>
+                                            <button onclick="verAsesoria(${asesoria.id})" class="btn btn-info w-100">
+                                                <i class="fas fa-eye me-2"></i>Ver Detalles
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        asesoriaTableBody.appendChild(card);
+                    });
+                });
+        });
+
+        function verAsesoria(id) {
+            window.location.href = `/miasesoriaver.html?id=${id}`;
+        }
+    </script>
+</body>
+</html>

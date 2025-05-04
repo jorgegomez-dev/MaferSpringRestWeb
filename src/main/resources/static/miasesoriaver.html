@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Asesoria</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background-color: white;
+            padding: 100px;
+            margin: 0 auto;
+            border-radius: 10px;
+            max-width: 1200px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+        .card img {
+            width: 150px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .card h2 {
+            text-align: center;
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .card p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #555;
+        }
+        .card p strong {
+            color: #333;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .buttons a {
+            padding: 12px 20px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .buttons a:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 600px) {
+            .card {
+                padding: 20px;
+            }
+            .card h2 {
+                font-size: 20px;
+            }
+            .card p {
+                font-size: 14px;
+            }
+            .buttons a {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img id="imagen-asesoria" src="" alt="Imagen de Asesoria">
+        <h2 id="nombre-asesoria">Nombre de Asesoria</h2>
+        <p><strong>PDF:</strong> <span id="pdf"></span></p>
+        <p><strong>Link de Pago:</strong> <span id="link-pago"></span></p>
+        <p><strong>Precio:</strong> <span id="precio"></span></p>
+
+        <div class="buttons">
+            <a onclick="window.location.href='mitiendaasesorias.html'">Volver</a>
+            <a onclick="window.location.href='usercontrolpanel.html'">Regresar al Panel</a>
+            <!-- <a id="btn-modificar" href="#">Modificar asesoria</a> -->
+        </div>
+    </div>
+
+    <script>
+
+        // Desde aca es el mismo codigo para todas las paginas de la app, con las funciones necesarias para
+        // solicitar las validaciones correspondientes, el almacenamiento, la carga de id y session, y la informacion
+        // servida para la siguiente pagina en localStorage()
+        //-----------------------------------------------------------------------------------------------------------
+
+    async function validarSession() {
+        // Obtén el id y la sesión de localStorage
+        const id = localStorage.getItem('id');
+        const session = localStorage.getItem('session');
+
+        if (!id || !session) {
+            console.warn('ID o sesión no disponibles');
+            window.location.href = '/login.html'; // Redirige al login si no están presentes
+            return false; // La sesión no es válida
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/autenticacion/validarSession', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'id': id,
+                    'session': session
+                }
+            });
+
+            if (response.ok) {
+                return true; // La sesión es válida
+            } else if (response.status === 401) {
+                console.warn('Sesión inválida o expirada');
+                // Borra el id y la sesión de localStorage
+                localStorage.removeItem('id');
+                localStorage.removeItem('session');
+                // Redirige al usuario a la página de login
+                window.location.href = '/login.html'; // Cambia esto a tu ruta de login
+                return false;
+            } else {
+                console.error('Error al validar la sesión:', response.statusText);
+                return false; // Otros errores
+            }
+        } catch (error) {
+            console.error('Error al validar la sesión:', error);
+            return false; // Error al validar
+        }
+    }
+
+    // Ejecuta la validación de sesión al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+        validarSession(); // Verifica la sesión al cargar cualquier página
+    });
+
+        // Hasta aca es el mismo codigo para todas las paginas de la app, con las funciones necesarias para
+        // solicitar las validaciones correspondientes, el almacenamiento, la carga de id y session, y la informacion
+        // servida para la siguiente pagina.
+        //-----------------------------------------------------------------------------------------------------------
+
+        // Obtener el parámetro ID de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+
+        // Cargar datos del asesoria desde el servidor
+        fetch(`http://localhost:8080/api/asesorias/buscarAsesoriaId/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("imagen-asesoria").src = data.imgUrl;
+                document.getElementById("nombre-asesoria").textContent = data.nombreAsesoria;
+                document.getElementById("pdf").textContent = data.pdfUrl;
+                document.getElementById("link-pago").textContent = data.linkPago;
+                document.getElementById("precio").textContent = data.precio;
+            });
+
+/*         // Actualizar el botón para modificar el ejercicio con el ID del ejercicio en el enlace
+        document.getElementById("btn-modificar").href = `asesoriaeditar.html?id=${id}`; */
+    </script>
+
+</body>
+</html>

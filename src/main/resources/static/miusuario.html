@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Usuario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background-color: white;
+            padding: 30px;
+            margin: 0 auto;
+            border-radius: 10px;
+            max-width: 800px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-align: left;
+        }
+        .card img {
+            width: 150px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .card h2 {
+            font-size: 26px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .card p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #555;
+        }
+        .card p strong {
+            color: #333;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .buttons a {
+            padding: 12px 20px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .buttons a:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 600px) {
+            .card {
+                padding: 20px;
+            }
+            .card h2 {
+                font-size: 22px;
+            }
+            .card p {
+                font-size: 14px;
+            }
+            .buttons a {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img id="perfil-foto" src="" alt="Foto de perfil">
+        <h2 id="nombre-usuario">Nombre Apellido</h2>
+        <p><strong>Email:</strong> <span id="email"></span></p>
+        <p><strong>Teléfono:</strong> <span id="telefono"></span></p>
+        <p><strong>Username:</strong> <span id="username"></span></p>
+        <p><strong>Peso:</strong> <span id="peso"></span> kg</p>
+        <p><strong>Altura:</strong> <span id="altura"></span> cm</p>
+        <p><strong>IMC:</strong> <span id="imc"></span></p>
+        <p><strong>Fecha de creación:</strong> <span id="createdOn"></span></p>
+        <p><strong>Última actualización:</strong> <span id="updatedOn"></span></p>
+        <p><strong>Fecha de nacimiento:</strong> <span id="birthdate"></span></p>
+        <p><strong>Edad:</strong> <span id="edad"></span></p>
+        <p><strong>Sexo:</strong> <span id="sexo"></span></p>
+        <p><strong>Rutina Asignada:</strong> <span id="idRutinaActual"></span></p>
+        <p><strong>Inicio rutina actual:</strong> <span id="fechaInicioRutina"></span></p>
+        <p><strong>Asesoria Asignada:</strong> <span id="idAsesoriaActual"></span></p>
+        <p><strong>Inicio asesoria actual:</strong> <span id="fechaInicioAsesoria"></span></p>
+        <p><strong>Vencimiento asesoria actual:</strong> <span id="fechaFinAsesoria"></span></p>
+
+        <div class="buttons">
+            <a onclick="window.location.href='usercontrolpanel.html'">Volver</a>
+            <a id="btn-modificar" href="#">Editar mis datos</a>
+            <a id="btn-rutina" href="#">Ver mi Rutina activa</a>
+            <a id="btn-contactar" href="https://wa.me/?text=Hola" target="_blank">Contactar Profesor</a>
+        </div>
+    </div>
+
+    <script>
+
+        
+
+        // Obtener el id y session desde localStorage
+        const id = localStorage.getItem('id');
+        const session = localStorage.getItem('session');
+
+        if (!id || !session) {
+            console.error("ID o Session no están disponibles en localStorage.");
+            window.location.href = 'login.html'; // Redirigir si no hay id o session
+        }
+
+        // Realizar la solicitud para obtener datos del usuario
+        fetch(`http://localhost:8080/api/usuarios/mostrarUsuarioId`, {
+            method: 'GET',
+            headers: {
+                'id': id,
+                'session': session
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la solicitud'); // Manejar errores de la solicitud
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("perfil-foto").src = data.urlfotoperfil;
+            document.getElementById("nombre-usuario").textContent = `${data.nombre} ${data.apellido}`;
+            document.getElementById("email").textContent = data.email;
+            document.getElementById("telefono").textContent = data.telefono;
+            document.getElementById("username").textContent = data.username;
+            document.getElementById("peso").textContent = data.peso;
+            document.getElementById("altura").textContent = data.altura;
+            document.getElementById("imc").textContent = data.imc;
+            document.getElementById("createdOn").textContent = new Date(data.createdOn).toLocaleString();
+            document.getElementById("updatedOn").textContent = new Date(data.updatedOn).toLocaleString();
+            document.getElementById("birthdate").textContent = new Date(data.birthdate).toLocaleDateString();
+            document.getElementById("edad").textContent = data.edad;
+            document.getElementById("sexo").textContent = data.sexo;
+            document.getElementById("idRutinaActual").textContent = data.idRutinaActual;
+            document.getElementById("fechaInicioRutina").textContent = new Date(data.fechaInicioRutina).toLocaleDateString();
+            document.getElementById("idAsesoriaActual").textContent = data.idAsesoriaActual;
+            document.getElementById("fechaInicioAsesoria").textContent = new Date(data.fechaInicioAsesoria).toLocaleDateString();
+            document.getElementById("fechaFinAsesoria").textContent = new Date(data.fechaFinAsesoria).toLocaleDateString();
+
+            // Actualizar el botón "Ver Rutina activa"
+            const idRutinaActual = data.idRutinaActual;
+            document.getElementById("btn-rutina").onclick = () => {
+                window.location.href = `/mirutina.html?id=${idRutinaActual}`;
+            };
+        })
+        .catch(error => {
+            console.error('Error al cargar los datos del usuario:', error);
+        });
+
+        // Actualizar los botones para incluir el ID del usuario en los enlaces
+        document.getElementById("btn-modificar").href = `miusuarioeditar.html?id=${id}`;
+
+    </script>
+
+</body>
+</html>

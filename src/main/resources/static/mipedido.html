@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Pedido</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .ticket {
+            border: 1px solid #ddd;
+            padding: 30px;
+            max-width: 900px;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .ticket h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .ticket table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .ticket table, th, td {
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        .total {
+            text-align: right;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            margin-top: 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .usuario-info {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .btn-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .btn-small {
+            flex: 1;
+            margin: 5px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .btn-small:nth-child(2) {
+            background-color: #f39c12;
+        }
+        .btn-small:nth-child(3) {
+            background-color: #3498db;
+        }
+        .btn-small:nth-child(4) {
+            background-color: #25D366; /* Color de WhatsApp */
+        }
+        .btn-small:hover {
+            transform: translateY(-2px);
+        }
+        #estado {
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket">
+        <h2>Pedido #<span id="pedidoId"></span></h2>
+        <p>Fecha de creación: <span id="createdOn"></span></p>
+        <p>Estado: <span id="estado"></span></p>
+
+        <div class="usuario-info">
+            <h3>Información del Usuario</h3>
+            <p>ID Usuario: <span id="usuarioId"></span></p>
+            <p>Nombre: <span id="nombreUsuario"></span></p>
+            <p>Apellido: <span id="apellidoUsuario"></span></p>
+            <p>Email: <span id="emailUsuario"></span></p>
+            <p>Teléfono: <span id="telefonoUsuario"></span></p>
+            <p>Username: <span id="usernameUsuario"></span></p>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Producto</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Marca</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody id="productosLista">
+                <!-- Productos se agregarán aquí -->
+            </tbody>
+        </table>
+
+        <div class="total">
+            <strong>Total: $<span id="precioTotal"></span></strong>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn-small" id="btnVolver">Volver</button>
+            <button class="btn-small" id="btnImprimir">Imprimir Pedido</button>
+            <button class="btn-small" id="btnWhatsApp">Contactar por WhatsApp</button>
+        </div>
+
+    </div>
+
+    <script>
+        // Función para obtener los parámetros de la URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Obtener el id del pedido de la URI
+        const pedidoId = getQueryParam('id');
+        let telefonoUsuario = '';
+
+        if (!pedidoId) {
+            alert('No se ha proporcionado un ID de pedido válido.');
+        }
+
+        // Obtener el id y la session desde localStorage
+        const idUsuario = localStorage.getItem('id'); // Asegúrate de que el id se guarde en localStorage como 'id'
+        const session = localStorage.getItem('session'); // Asegúrate de que la session se guarde como 'session'
+
+        // Función para cargar los datos del pedido y del usuario
+        function cargarPedido() {
+            fetch(`http://localhost:8080/api/pedidos/buscarPedidoId/${pedidoId}`)
+                .then(response => response.json())
+                .then(pedido => {
+                    document.getElementById('pedidoId').innerText = pedido.id;
+                    document.getElementById('createdOn').innerText = pedido.createdOn;
+                    document.getElementById('estado').innerText = pedido.estado;
+
+                    // Cargar información del usuario
+                    cargarUsuario(pedido.idUsuario);
+
+                    let productosLista = document.getElementById('productosLista');
+                    productosLista.innerHTML = ''; // Limpiar lista de productos
+                    let precioTotal = 0;
+
+                    const productos = [
+                        { id: pedido.idProductoUno, cantidad: pedido.cantProductoUno },
+                        { id: pedido.idProductoDos, cantidad: pedido.cantProductoDos },
+                        { id: pedido.idProductoTres, cantidad: pedido.cantProductoTres },
+                        { id: pedido.idProductoCuatro, cantidad: pedido.cantProductoCuatro },
+                        { id: pedido.idProductoCinco, cantidad: pedido.cantProductoCinco },
+                        { id: pedido.idProductoSeis, cantidad: pedido.cantProductoSeis },
+                        { id: pedido.idProductoSiete, cantidad: pedido.cantProductoSiete },
+                        { id: pedido.idProductoOcho, cantidad: pedido.cantProductoOcho },
+                        { id: pedido.idProductoNueve, cantidad: pedido.cantProductoNueve },
+                        { id: pedido.idProductoDiez, cantidad: pedido.cantProductoDiez }
+                    ];
+
+                    // Filtrar los productos no nulos
+                    productos.filter(p => p.id != null).forEach(p => {
+                        fetch(`http://localhost:8080/api/productos/buscarProductoId/${p.id}`)
+                            .then(response => response.json())
+                            .then(producto => {
+                                let subtotal = producto.precio * p.cantidad;
+                                precioTotal += subtotal;
+
+                                productosLista.innerHTML += `
+                                    <tr>
+                                        <td>${producto.id}</td>
+                                        <td>${producto.nombreProducto}</td>
+                                        <td>${producto.tipoDeProducto}</td>
+                                        <td>${producto.marca}</td>
+                                        <td>${p.cantidad}</td>
+                                        <td>$${producto.precio.toFixed(2)}</td>
+                                        <td>$${subtotal.toFixed(2)}</td>
+                                    </tr>
+                                `;
+
+                                // Actualizar el total en el DOM
+                                document.getElementById('precioTotal').innerText = precioTotal.toFixed(2);
+                            });
+                    });
+                });
+        }
+
+        // Función para cargar la información del usuario
+        function cargarUsuario(idUsuario) {
+            fetch(`http://localhost:8080/api/usuarios/mostrarUsuarioId`, {
+                method: 'GET',
+                headers: {
+                    'id': idUsuario,
+                    'session': session
+                }
+            })
+            .then(response => response.json())
+            .then(usuario => {
+                document.getElementById('usuarioId').innerText = usuario.id;
+                document.getElementById('nombreUsuario').innerText = usuario.nombre;
+                document.getElementById('apellidoUsuario').innerText = usuario.apellido;
+                document.getElementById('emailUsuario').innerText = usuario.email;
+                document.getElementById('telefonoUsuario').innerText = usuario.telefono;
+                document.getElementById('usernameUsuario').innerText = usuario.username;
+            });
+        }
+
+        // Función para volver a la lista de pedidos
+        function volver() {
+            window.location.href = 'mispedidos.html';
+        }
+
+        // Función para imprimir el pedido
+        function imprimirPedido() {
+            window.print();
+        }
+
+        // Función para contactar por WhatsApp
+        function contactarPorWhatsApp() {
+            const url = `https://api.whatsapp.com/send?phone=${1166445588}&text=Hola%20los%20contacto%20por%20el%20pedido%20número%20${pedidoId}.`; 
+            window.open(url, '_blank');
+        }
+
+        // Cargar datos del pedido al cargar la página
+        window.onload = cargarPedido;
+
+        // Asignar eventos a los botones
+        document.getElementById('btnVolver').onclick = volver;
+        document.getElementById('btnImprimir').onclick = imprimirPedido;
+        document.getElementById('btnWhatsApp').onclick = contactarPorWhatsApp;
+    </script>
+</body>
+</html>

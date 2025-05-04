@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Día</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+            cursor: pointer;
+        }
+
+        select option {
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 5px;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: calc(33% - 10px);
+            background-color: #3498db;
+        }
+
+        button[type="submit"] {
+            background-color: #27ae60;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button[type="submit"]:hover {
+            background-color: #219a52;
+        }
+
+        .add-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Estilos para campos requeridos */
+        input:required, select:required {
+            border-left: 3px solid #3498db;
+        }
+
+        /* Estilos para campos con error */
+        input:invalid:not(:placeholder-shown),
+        select:invalid:not(:placeholder-shown) {
+            border-color: #e74c3c;
+        }
+
+        /* Grupos de ejercicios */
+        .form-group {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        /* Estilos para placeholder */
+        input::placeholder,
+        select::placeholder {
+            color: #95a5a6;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            form {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            h1 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Efectos hover */
+        input:hover:not(:disabled), 
+        select:hover:not(:disabled) {
+            border-color: #3498db;
+        }
+
+        /* Estilos para campos deshabilitados */
+        input:disabled,
+        select:disabled {
+            background-color: #f8f9fa;
+            border-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        /* Contenedor de botones */
+        form > button:last-child {
+            margin-top: 20px;
+        }
+
+        /* Estilos para selects vacíos */
+        select:invalid {
+            color: #95a5a6;
+        }
+
+        /* Mejora visual para los grupos de ejercicios */
+        select + label {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        /* Estilo para el primer ejercicio */
+        label[for="ejercicioUno"] {
+            margin-top: 30px;
+            font-weight: 600;
+            color: #2c3e50; 
+            padding-top: 20px;
+        }
+
+        /* Contenedor de botones al final del formulario */
+        form > button {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Editar Día de Ejercicios</h1>
+
+    <form id="editDiaForm">
+        <label for="nombreDia">Nombre del Día:</label>
+        <input type="text" id="nombreDia" name="nombreDia" required>
+
+        <label for="sexo">Sexo:</label>
+        <select id="sexo" name="sexo" required>
+            <option value="" disabled selected>Selecciona el sexo</option>
+            <option value="Hombre">Hombre</option>
+            <option value="Mujer">Mujer</option>
+        </select>
+
+        <!-- Sección de ejercicios asignados -->
+        <label for="ejercicioUno">Ejercicio 1:</label>
+        <select id="ejercicioUno" name="ejercicioUno">
+            <option value="">Sin ejercicio asignado</option>
+        </select>
+
+        <label for="ejercicioDos">Ejercicio 2:</label>
+        <select id="ejercicioDos" name="ejercicioDos">
+            <option value="">Sin ejercicio asignado</option>
+        </select>
+
+        <label for="ejercicioTres">Ejercicio 3:</label>
+        <select id="ejercicioTres" name="ejercicioTres">
+            <option value="">Sin ejercicio asignado</option>
+        </select>
+
+        <label for="ejercicioCuatro">Ejercicio 4:</label>
+        <select id="ejercicioCuatro" name="ejercicioCuatro">
+            <option value="">Sin ejercicio asignado</option>
+        </select>
+
+        <label for="ejercicioCinco">Ejercicio 5:</label>
+        <select id="ejercicioCinco" name="ejercicioCinco">
+            <option value="">Sin ejercicio asignado</option>
+        </select>
+
+        <label for="ejercicioSeis">Ejercicio 6:</label>
+        <select id="ejercicioSeis" name="ejercicioSeis">
+            <option value="">Sin ejercicio asignado</option>
+        </select>
+
+        <label for="ejercicioSiete">Ejercicio 7:</label>
+        <select id="ejercicioSiete" name="ejercicioSiete">
+            <option value="">Sin ejercicio asignado</option>
+        </select>
+
+        <label for="ejercicioOcho">Ejercicio 8:</label>
+        <select id="ejercicioOcho" name="ejercicioOcho">
+            <option value="">Sin ejercicio asignado</option>
+        </select>
+
+        <label for="ejercicioNueve">Ejercicio 9:</label>
+        <select id="ejercicioNueve" name="ejercicioNueve">
+            <option value="">Sin ejercicio asignado</option>
+        </select>
+
+        <label for="ejercicioDiez">Ejercicio 10:</label>
+        <select id="ejercicioDiez" name="ejercicioDiez">
+            <option value="">Sin ejercicio asignado</option>
+        </select>
+
+        <button type="submit">Guardar Cambios</button>
+        <button class="add-button" onclick="window.location.href='dias.html'">Volver</button>
+        <button class="add-button" onclick="window.location.href='admincontrolpanel.html'">Regresar al Panel</button>
+    </form>
+
+    <script>
+
+    async function validarSession() {
+        const id = localStorage.getItem('id');
+        const session = localStorage.getItem('session');
+
+        if (!id || !session) {
+            console.warn('ID o sesión no disponibles');
+            window.location.href = '/login.html';
+            return false;
+        }
+
+        try {
+            const response = await fetch('http://localhost:8080/api/autenticacion/validarSession', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'id': id,
+                    'session': session
+                }
+            });
+
+            if (response.ok) {
+                return true;
+            } else if (response.status === 401) {
+                console.warn('Sesión inválida o expirada');
+                localStorage.removeItem('id');
+                localStorage.removeItem('session');
+                window.location.href = '/login.html';
+                return false;
+            } else {
+                console.error('Error al validar la sesión:', response.statusText);
+                return false;
+            }
+        } catch (error) {
+            console.error('Error al validar la sesión:', error);
+            return false;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        validarSession();
+    });
+
+        const params = new URLSearchParams(window.location.search);
+        const diaId = params.get('id');
+
+        function cargarEjercicios() {
+            return fetch('http://localhost:8080/api/ejercicios/listarEjercicios')
+                .then(response => response.json())
+                .then(ejercicios => {
+                    const selects = [
+                        'ejercicioUno', 'ejercicioDos', 'ejercicioTres',
+                        'ejercicioCuatro', 'ejercicioCinco', 'ejercicioSeis',
+                        'ejercicioSiete', 'ejercicioOcho', 'ejercicioNueve', 'ejercicioDiez'
+                    ];
+
+                    selects.forEach(selectId => {
+                        const selectElement = document.getElementById(selectId);
+
+                        ejercicios.forEach(ejercicio => {
+                            const option = document.createElement('option');
+                            option.value = ejercicio.id;
+                            option.textContent = ejercicio.nombreEjercicio;
+                            selectElement.appendChild(option);
+                        });
+                    });
+                })
+                .catch(error => console.error('Error al cargar los ejercicios:', error));
+        }
+
+        function cargarDatosDia(diaId) {
+            fetch(`http://localhost:8080/api/dias/buscarDiaId/${diaId}`)
+                .then(response => response.json())
+                .then(dia => {
+                    document.getElementById('nombreDia').value = dia.nombreDia || '';
+                    document.getElementById('sexo').value = dia.sexo || '';
+
+                    document.getElementById('ejercicioUno').value = dia.ejercicioUno || '';
+                    document.getElementById('ejercicioDos').value = dia.ejercicioDos || '';
+                    document.getElementById('ejercicioTres').value = dia.ejercicioTres || '';
+                    document.getElementById('ejercicioCuatro').value = dia.ejercicioCuatro || '';
+                    document.getElementById('ejercicioCinco').value = dia.ejercicioCinco || '';
+                    document.getElementById('ejercicioSeis').value = dia.ejercicioSeis || '';
+                    document.getElementById('ejercicioSiete').value = dia.ejercicioSiete || '';
+                    document.getElementById('ejercicioOcho').value = dia.ejercicioOcho || '';
+                    document.getElementById('ejercicioNueve').value = dia.ejercicioNueve || '';
+                    document.getElementById('ejercicioDiez').value = dia.ejercicioDiez || '';
+                })
+                .catch(error => console.error('Error al cargar los datos del día:', error));
+        }
+
+        if (diaId) {
+            cargarEjercicios().then(() => {
+                cargarDatosDia(diaId);
+            });
+        } else {
+            alert('ID del día no encontrado.');
+        }
+
+        document.getElementById('editDiaForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const diaData = {
+                nombreDia: document.getElementById('nombreDia').value,
+                sexo: document.getElementById('sexo').value,
+                ejercicioUno: document.getElementById('ejercicioUno').value || null,
+                ejercicioDos: document.getElementById('ejercicioDos').value || null,
+                ejercicioTres: document.getElementById('ejercicioTres').value || null,
+                ejercicioCuatro: document.getElementById('ejercicioCuatro').value || null,
+                ejercicioCinco: document.getElementById('ejercicioCinco').value || null,
+                ejercicioSeis: document.getElementById('ejercicioSeis').value || null,
+                ejercicioSiete: document.getElementById('ejercicioSiete').value || null,
+                ejercicioOcho: document.getElementById('ejercicioOcho').value || null,
+                ejercicioNueve: document.getElementById('ejercicioNueve').value || null,
+                ejercicioDiez: document.getElementById('ejercicioDiez').value || null
+            };
+
+            fetch(`http://localhost:8080/api/dias/updateDia/${diaId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(diaData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Día actualizado exitosamente.');
+                    window.location.href = 'dias.html'; // Redirige a la página de días
+                } else {
+                    alert('Error al actualizar el día.');
+                }
+            })
+            .catch(error => console.error('Error al guardar los cambios:', error));
+        });
+    </script>
+
+</body>
+</html>
+

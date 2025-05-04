@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Usuario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .perfil-foto {
+            width: 150px;
+            border-radius: 50%;
+            display: block;
+            margin: 0 auto 20px auto;
+            
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #555;
+        }
+        p strong {
+            color: #333;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        button {
+            flex: 1;
+            margin: 5px;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        @media (max-width: 600px) {
+            .buttons {
+                flex-direction: column;
+            }
+            button {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ficha de Usuario</h1>
+        
+        <img id="perfil-foto" src="" alt="Foto de perfil" class="perfil-foto" />
+        <h2 id="nombre-usuario"></h2>
+        <p><strong>ID Usuario:</strong> <span id="id"></span></p>
+        <p><strong>Email:</strong> <span id="email"></span></p>
+        <p><strong>Teléfono:</strong> <span id="telefono"></span></p>
+        <p><strong>Username:</strong> <span id="username"></span></p>
+        <p><strong>Rol:</strong> <span id="role"></span></p>
+        <p><strong>Peso:</strong> <span id="peso"></span></p>
+        <p><strong>Altura:</strong> <span id="altura"></span></p>
+        <p><strong>IMC:</strong> <span id="imc"></span></p>
+        <p><strong>Creado el:</strong> <span id="createdOn"></span></p>
+        <p><strong>Actualizado el:</strong> <span id="updatedOn"></span></p>
+        <p><strong>Fecha de nacimiento:</strong> <span id="birthdate"></span></p>
+        <p><strong>Edad:</strong> <span id="edad"></span></p>
+        <p><strong>Sexo:</strong> <span id="sexo"></span></p>
+        <p><strong>ID Rutina Actual:</strong> <span id="idRutinaActual"></span></p>
+        <p><strong>Fecha Inicio Rutina:</strong> <span id="fechaInicioRutina"></span></p>
+        <p><strong>ID Asesoría Actual:</strong> <span id="idAsesoriaActual"></span></p>
+        <p><strong>Fecha Inicio Asesoría:</strong> <span id="fechaInicioAsesoria"></span></p>
+        <p><strong>Fecha Fin Asesoría:</strong> <span id="fechaFinAsesoria"></span></p>
+        
+
+        <div class="buttons">
+            <button id="btn-volver">Volver</button>
+            <button id="btn-regresar-panel">Regresar al Panel</button>
+            <button id="btn-modificar-usuario">Modificar usuario</button>
+            <button id="btn-rutina">Ver rutina activa</button>
+            <button id="btn-contactar">Contactar usuario</button>
+        </div>
+    </div>
+
+    <script>
+        function sendRequestWithHeaders(page, userId) {
+            const id = localStorage.getItem('id');
+            const session = localStorage.getItem('session');
+    
+            if (id && session) {
+                fetch(page, {
+                    method: 'GET',
+                    headers: {
+                        'id': id,
+                        'session': session,
+                        'userId': userId
+                    }
+                }).then(() => {
+                    // Guardar los valores de id y userId en localStorage
+                    localStorage.setItem('id', id);
+                    localStorage.setItem('session', session);
+                    localStorage.setItem('targetUserId', userId);
+    
+                    // Redirigir a la página solicitada
+                    window.location.href = page;
+                }).catch(error => {
+                    console.error('Error en la redirección:', error);
+                });
+            } else {
+                console.error("ID o Session no están disponibles en localStorage.");
+                window.location.href = 'login.html';
+            }
+        }
+    
+        function init() {
+            const id = localStorage.getItem('id');
+            const session = localStorage.getItem('session');
+            const targetUserId = localStorage.getItem('targetUserId');
+    
+            if (!id || !session || !targetUserId) {
+                console.error("ID, Session o UserID no están disponibles en localStorage.");
+                window.location.href = 'login.html';
+                return;
+            }
+    
+            // Realizar la solicitud para obtener datos del usuario
+            fetch(`http://localhost:8080/api/usuarios/buscarUsuarioId`, {
+                method: 'GET',
+                headers: {
+                    'id': id,
+                    'session': session,
+                    'userId': targetUserId
+                }
+            })
+            .then(response => {
+            if (response.status === 401) {
+                // Si el servidor responde con UNAUTHORIZED
+                alert('Error de autenticación. La sesión ha expirado. Vuelva a loguearse.');
+                window.location.href = 'login.html'; // Redirigir a la página de login
+            } else if (response.ok) {
+                return response.json(); // Si la respuesta es OK, devolver los datos
+            } else {
+                throw new Error('Error inesperado al cargar usuarios.');
+            }
+            })
+            .then(data => {
+                // Cargar los datos en la página
+                document.getElementById("id").textContent = data.id;
+                document.getElementById("perfil-foto").src = data.urlfotoperfil;
+                document.getElementById("nombre-usuario").textContent = `${data.nombre} ${data.apellido}`;
+                document.getElementById("email").textContent = data.email;
+                document.getElementById("telefono").textContent = data.telefono;
+                document.getElementById("username").textContent = data.username;
+                document.getElementById("role").textContent = data.role;
+                document.getElementById("peso").textContent = data.peso;
+                document.getElementById("altura").textContent = data.altura;
+                document.getElementById("imc").textContent = data.imc;
+                document.getElementById("createdOn").textContent = new Date(data.createdOn).toLocaleString();
+                document.getElementById("updatedOn").textContent = new Date(data.updatedOn).toLocaleString();
+                document.getElementById("birthdate").textContent = new Date(data.birthdate).toLocaleDateString();
+                document.getElementById("edad").textContent = data.edad;
+                document.getElementById("sexo").textContent = data.sexo;
+                document.getElementById("idRutinaActual").textContent = data.idRutinaActual;
+                document.getElementById("fechaInicioRutina").textContent = new Date(data.fechaInicioRutina).toLocaleDateString();
+                document.getElementById("idAsesoriaActual").textContent = data.idAsesoriaActual;
+                document.getElementById("fechaInicioAsesoria").textContent = new Date(data.fechaInicioAsesoria).toLocaleDateString();
+                document.getElementById("fechaFinAsesoria").textContent = new Date(data.fechaFinAsesoria).toLocaleDateString();
+    
+/*                 // Actualizar el botón "Ver Rutina activa"
+                const idRutinaActual = data.idRutinaActual;
+                document.getElementById("btn-rutina").onclick = () => {
+                    sendRequestWithHeaders(`/rutinaver.html`, idRutinaActual);
+                }; */
+
+/*                 // Actualizar el botón "Ver Rutina activa"
+            const idRutinaActual = data.idRutinaActual;
+            document.getElementById("btn-rutina").onclick = () => {
+            const id = localStorage.getItem("id");  // Obtén el id desde localStorage
+            const session = localStorage.getItem("session");  // Obtén la sesión desde localStorage
+            sendRequestWithHeaders(`/rutinaver.html?idRutinaActual=${idRutinaActual}`, id, session);
+                }; */
+
+                // Actualizar el botón "Ver Rutina activa"
+const idRutinaActual = data.idRutinaActual;
+document.getElementById("btn-rutina").onclick = () => {
+    // Redirigir a rutinaver.html con el idRutinaActual como parámetro en la URL
+    window.location.href = `/rutinaver.html?idRutinaActual=${idRutinaActual}`;
+};
+    
+                // Configurar el botón "Contactar usuario"
+                document.getElementById("btn-contactar").onclick = () => {
+                    window.open(`https://wa.me/${data.telefono}`, '_blank');
+                };
+            })
+            .catch(error => {
+                console.error('Error al obtener datos del usuario:', error);
+            });
+    
+            // Asignar acciones a los botones usando sendRequestWithHeaders
+            document.getElementById("btn-volver").onclick = () => {
+                sendRequestWithHeaders(`usuarios.html`, targetUserId);
+            };
+    
+            document.getElementById("btn-regresar-panel").onclick = () => {
+                sendRequestWithHeaders(`admincontrolpanel.html`, targetUserId);
+            };
+    
+             document.getElementById("btn-modificar-usuario").onclick = () => {
+                sendRequestWithHeaders(`usuarioeditar.html`, targetUserId);
+            }; 
+        }
+    
+        // Inicializar la página
+        window.onload = init;
+    </script>
+    
+</body>
+</html>

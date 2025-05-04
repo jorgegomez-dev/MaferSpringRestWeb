@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuario</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+        }
+
+        input:disabled {
+            background-color: #f8f9fa;
+            border-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        input[type="date"] {
+            padding: 11px;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 5px;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: calc(33% - 10px);
+        }
+
+        button[type="submit"] {
+            background-color: #27ae60;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #219a52;
+            transform: translateY(-2px);
+        }
+
+        button[type="button"] {
+            background-color: #3498db;
+        }
+
+        button[type="button"]:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para campos numéricos */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Estilos para campos requeridos */
+        input:required:not(:disabled), select:required {
+            border-left: 3px solid #3498db;
+        }
+
+        /* Estilos para campos con error */
+        input:invalid:not(:placeholder-shown):not(:disabled) {
+            border-color: #e74c3c;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            form {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            h1 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Efectos hover */
+        input:hover:not(:disabled), 
+        select:hover:not(:disabled) {
+            border-color: #3498db;
+        }
+
+        /* Estilos para placeholder */
+        input::placeholder {
+            color: #95a5a6;
+        }
+
+        /* Contenedor de botones */
+        form > button {
+            margin-top: 20px;
+        }
+
+        /* Estilos para el campo de contraseña */
+        input[type="password"] {
+            letter-spacing: 0.1em;
+        }
+
+        /* Grupos de campos relacionados */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        /* Estilos para campos deshabilitados */
+        input:disabled + label {
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Editar Usuario</h1>
+
+    <form id="editUserForm">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" required>
+
+        <label for="email">Correo Electrónico:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="telefono">Telefono:</label>
+        <input type="number" id="telefono" name="telefono" step="1" required>
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Contraseña (dejar en blanco para no cambiar):</label>
+        <input type="password" id="password" name="password">
+
+        <label for="role">ROL:</label>
+        <select id="role" name="role" required>
+            <option value=""disabled selected>Seleccione el Rol</option>
+            <option value="ROLE_ADMIN">ADMINISTRADOR</option>
+            <option value="ROLE_USER">USUARIO</option>
+        </select>
+
+        <label for="peso">Peso (kg):</label>
+        <input type="number" id="peso" name="peso" step="0.01" required>
+
+        <label for="altura">Altura (m):</label>
+        <input type="number" id="altura" name="altura" step="0.01" required>
+
+        <label for="sexo">Sexo:</label>
+        <select id="sexo" name="sexo" required>
+            <option value="" disabled selected>Selecciona el sexo</option>
+            <option value="Hombre">Hombre</option>
+            <option value="Mujer">Mujer</option>
+        </select>
+
+        <label for="urlfotoperfil">Foto de Perfil:</label>
+        <input type="text" id="urlfotoperfil" name="urlfotoperfil" required>
+
+        <label for="idRutinaActual">Id Rutina:</label>
+        <input type="number" id="idRutinaActual" name="idRutinaActual" disabled>
+
+        <label for="fechaInicioRutina">Fecha Inicio Rutina:</label>
+        <input type="date" id="fechaInicioRutina" name="fechaInicioRutina" disabled>
+
+        <label for="idAsesoriaActual">Id Asesoría:</label>
+        <input type="number" id="idAsesoriaActual" name="idAsesoriaActual" disabled>
+
+        <label for="fechaInicioAsesoria">Fecha Inicio Asesoría:</label>
+        <input type="date" id="fechaInicioAsesoria" name="fechaInicioAsesoria" disabled>
+
+        <button type="submit">Guardar Cambios</button>
+        <button type="button" id="btn-volver">Volver</button>
+        <button type="button" id="btn-regresar-panel">Regresar al Panel</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function getParams() {
+                const id = localStorage.getItem('id');
+                const session = localStorage.getItem('session');
+                const userId = localStorage.getItem('targetUserId');
+        
+                if (!id || !session || !userId) {
+                    console.error("ID, Session o UserId no están disponibles en localStorage.");
+                    window.location.href = 'login.html';
+                } else {
+                    fetch('http://localhost:8080/api/usuarios/buscarUsuarioId', {
+                        method: 'GET',
+                        headers: {
+                            'id': id,
+                            'session': session,
+                            'userId': userId
+                        }
+                    })
+                    .then(response => {
+            if (response.status === 401) {
+                // Si el servidor responde con UNAUTHORIZED
+                alert('Error de autenticación. La sesión ha expirado. Vuelva a loguearse.');
+                window.location.href = 'login.html'; // Redirigir a la página de login
+            } else if (response.ok) {
+                return response.json(); // Si la respuesta es OK, devolver los datos
+            } else {
+                throw new Error('Error inesperado al cargar usuarios.');
+            }
+        })
+                    .then(data => {
+                        document.getElementById('nombre').value = data.nombre || '';
+                        document.getElementById('apellido').value = data.apellido || '';
+                        document.getElementById('email').value = data.email || '';
+                        document.getElementById('telefono').value = data.telefono || '';
+                        document.getElementById('username').value = data.username || '';
+                        document.getElementById('role').value = data.role || '';
+                        document.getElementById('peso').value = data.peso || '';
+                        document.getElementById('altura').value = data.altura || '';
+                        document.getElementById('sexo').value = data.sexo || '';
+                        document.getElementById('urlfotoperfil').value = data.urlfotoperfil || '';
+                        document.getElementById('idRutinaActual').value = data.idRutinaActual || '';
+                        document.getElementById('fechaInicioRutina').value = data.fechaInicioRutina || '';
+                        document.getElementById('idAsesoriaActual').value = data.idAsesoriaActual || '';
+                        document.getElementById('fechaInicioAsesoria').value = data.fechaInicioAsesoria || '';
+                    })
+                    .catch(error => {
+                        console.error('Error en la solicitud:', error);
+                    });
+                }
+            }
+        
+            getParams();
+        
+            document.getElementById('editUserForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+        
+                const id = localStorage.getItem('id');
+                const session = localStorage.getItem('session');
+                const userId = localStorage.getItem('targetUserId');
+        
+                if (id && session && userId) {
+                    const usuario = {
+                        nombre: document.getElementById('nombre').value,
+                        apellido: document.getElementById('apellido').value,
+                        email: document.getElementById('email').value,
+                        telefono: document.getElementById('telefono').value,
+                        username: document.getElementById('username').value,
+                        role: document.getElementById('role').value,
+                        peso: document.getElementById('peso').value,
+                        altura: document.getElementById('altura').value,
+                        sexo: document.getElementById('sexo').value,
+                        urlfotoperfil: document.getElementById('urlfotoperfil').value,
+                        idRutinaActual: document.getElementById('idRutinaActual').value,
+                        fechaInicioRutina: document.getElementById('fechaInicioRutina').value,
+                        idAsesoriaActual: document.getElementById('idAsesoriaActual').value,
+                        fechaInicioAsesoria: document.getElementById('fechaInicioAsesoria').value
+                    };
+    
+                    // Solo añadir la contraseña si no está vacía
+                    const password = document.getElementById('password').value;
+                    if (password !== "") {
+                        usuario.password = password;
+                    } else {
+                        usuario.password = null; // Enviar null si está vacío
+                    }
+        
+                    fetch('http://localhost:8080/api/usuarios/updateUsuarioAdmin', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'id': id,
+                            'session': session,
+                            'userId': userId
+                        },
+                        body: JSON.stringify(usuario)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Usuario actualizado correctamente');
+                            window.location.href = 'usuarios.html';
+                        } else if (response.status === 401) {
+                            console.log('Sesión inválida o expirada');
+                            window.location.href = 'login.html';
+                        } else {
+                            throw new Error('Error al actualizar el usuario');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error en la actualización:', error);
+                    });
+                } else {
+                    console.error("ID, Session o UserId no están disponibles en localStorage.");
+                    window.location.href = 'login.html';
+                }
+            });
+        
+            document.getElementById('btn-volver').addEventListener('click', function() {
+                window.history.back();
+            });
+        
+            document.getElementById('btn-regresar-panel').addEventListener('click', function() {
+                window.location.href = 'admincontrolpanel.html';
+            });
+        });
+    </script>
+    
+        
+</body>
+</html>

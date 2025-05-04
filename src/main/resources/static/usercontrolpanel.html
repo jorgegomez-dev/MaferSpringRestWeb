@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Usuario</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(to right, #0056b3, #007BFF);
+            padding: 20px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 2em;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            max-width: 800px;
+            min-height: 450px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 123, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 10px;
+        }
+
+        button {
+            width: 100%;
+            max-width: 500px;
+            padding: 18px 25px;
+            font-size: 18px;
+            font-weight: 500;
+            text-align: center;
+            color: white;
+            background: linear-gradient(145deg, #007BFF, #0056b3);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            background: linear-gradient(145deg, #0056b3, #004494);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .whatsapp-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(145deg, #25D366, #128C7E);
+            color: white;
+            border-radius: 50%;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+            margin: 15px 0;
+        }
+
+        .whatsapp-icon:hover {
+            background: linear-gradient(145deg, #128C7E, #075E54);
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .whatsapp-icon img {
+            width: 35px;
+            height: 35px;
+            transition: transform 0.3s ease;
+        }
+
+        .whatsapp-icon:hover img {
+            transform: scale(1.1);
+        }
+
+        .logout-button {
+            background: linear-gradient(145deg, #dc3545, #c82333);
+            margin-top: 10px;
+        }
+
+        .logout-button:hover {
+            background: linear-gradient(145deg, #c82333, #bd2130);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 15px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+        }
+
+    </style>
+
+<script>
+    let isLoggingOut = false;
+
+    // Función para obtener los parámetros de la URL
+    function getParams() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get('id');
+        const session = params.get('session');
+        if (id && session) {
+            localStorage.setItem('id', id);
+            localStorage.setItem('session', session);
+        }
+    }
+
+    // Función para redirigir sin pasar los parámetros en la URL
+    function redirectTo(page) {
+        const id = localStorage.getItem('id');
+        const session = localStorage.getItem('session');
+        
+        if (id && session) {
+            window.location.href = page;
+        } else {
+            console.error("ID o Session no están disponibles en localStorage.");
+            window.location.href = 'login.html';
+        }
+    }
+
+    function logout() {
+        const id = localStorage.getItem('id');
+        const session = localStorage.getItem('session');
+
+        if (id && session) {
+            fetch(`http://localhost:8080/api/autenticacion/logout?id=${id}&session=${session}`, {
+                method: 'GET'
+            })
+            .then(response => {
+                if (response.ok) {
+                    localStorage.removeItem('id');
+                    localStorage.removeItem('session');
+                    window.location.href = 'login.html';
+                } else {
+                    console.error('Error al cerrar sesión:', response.status);
+                    alert('Error al cerrar sesión. Por favor, intenta de nuevo.');
+                }
+            })
+            .catch(error => {
+                console.error('Error de red:', error);
+                alert('No se pudo conectar al servidor. Por favor, intenta de nuevo.');
+            });
+        } else {
+            window.location.href = 'login.html';
+        }
+    }
+
+    function disableBeforeUnload() {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+    }
+
+    function handleBeforeUnload(event) {
+        if (!isLoggingOut) {
+            logout();
+        }
+        event.preventDefault();
+        event.returnValue = '';
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    window.onload = function() {
+        getParams(); // Obtener los parámetros al cargar la página
+        
+        // Realizar la solicitud para obtener datos del usuario
+        const id = localStorage.getItem('id');
+        const session = localStorage.getItem('session');
+
+        if (id && session) {
+            fetch(`http://localhost:8080/api/usuarios/mostrarUsuarioId`, {
+                method: 'GET',
+                headers: {
+                    'id': id,
+                    'session': session
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("nombre-usuario").value = `${data.nombre} ${data.apellido}`;
+                document.getElementById("username").value = data.username;
+                document.getElementById("idRutinaActual").value = data.idRutinaActual;
+
+                const idRutinaActual = data.idRutinaActual;
+                document.getElementById("btn-rutina").onclick = () => {
+                    disableBeforeUnload(); 
+                    redirectTo(`/mirutina.html?id=${idRutinaActual}`);
+                };
+            })
+            .catch(error => {
+                console.error('Error al cargar los datos del usuario:', error);
+            });
+        } else {
+            console.error("ID o Session no están disponibles en localStorage.");
+            window.location.href = 'login.html';
+        }
+    }
+</script>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Panel de Control - Usuario</h1>
+    </div>
+
+    <div class="container">
+        <div class="button-container">
+            <button onclick="disableBeforeUnload(); redirectTo('miusuario.html')">Mi Usuario</button>
+            <button id="btn-rutina">Ver mi rutina</button>
+            <button onclick="disableBeforeUnload(); redirectTo('mitiendaproductos.html')">Tienda de Productos</button>
+            <button onclick="disableBeforeUnload(); redirectTo('mitiendaasesorias.html')">Tienda de Asesorias</button>
+            <button onclick="disableBeforeUnload(); redirectTo('mispedidos.html')">Ver mis pedidos</button>
+            <div class="whatsapp-icon" onclick="disableBeforeUnload(); window.open('https://api.whatsapp.com/send?phone=+1234567890', '_blank')">
+                <img src="whatsapp-icon.png" alt="WhatsApp">
+            </div>
+            <button class="logout-button" onclick="logout()">SALIR</button> 
+
+            <input type="hidden" id="nombre-usuario">
+            <input type="hidden" id="username">
+            <input type="hidden" id="idRutinaActual">
+        </div>
+    </div>
+
+</body>
+</html>

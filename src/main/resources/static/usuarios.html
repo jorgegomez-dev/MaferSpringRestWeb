@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <title>Lista de Usuarios</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 25px 0;
+            background-color: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        td {
+            font-size: 0.95em;
+            vertical-align: middle;
+        }
+
+        /* Estilos mejorados para los botones */
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 5px;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+       /* .add-button {
+            background-color: #3498db;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+        }
+
+        .add-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }*/
+
+        .delete-button {
+            background-color: #e74c3c;
+        }
+
+        .delete-button:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .edit-button {
+            background-color: #f39c12;
+        }
+
+        .edit-button:hover {
+            background-color: #d35400;
+            transform: translateY(-2px);
+        }
+
+        .view-button {
+            background-color: #27ae60;
+        }
+
+        .view-button:hover {
+            background-color: #219a52;
+            transform: translateY(-2px);
+        }
+
+        .addrutina-button {
+            background-color: #2980b9;
+        }
+
+        .addrutina-button:hover {
+            background-color: #1a5276;
+            transform: translateY(-2px);
+        }
+
+        .addasesoria-button {
+            background-color: #8e44ad;
+        }
+
+        .addasesoria-button:hover {
+            background-color: #6c3483;
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para los filtros */
+        .filter-container { 
+    background-color: transparent;
+    padding: 20px;
+    /* border-radius: 8px; */
+    /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+    margin-bottom: 20px;
+        }
+
+        .filter-inputs {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        select, input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 1024px) {
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            td, th {
+                min-width: 120px;
+            }
+        }
+
+        /* Estilos para fechas y números */
+        td:nth-child(6), td:nth-child(10), td:nth-child(11), td:nth-child(12) {
+            text-align: center;
+            font-family: 'Consolas', monospace;
+        }
+
+        /* Estilos para fechas */
+        td:nth-child(14), td:nth-child(16), td:nth-child(17), td:nth-child(18), td:nth-child(19) {
+            white-space: nowrap;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .btn-outline-light.btn-sm {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            margin-right: 12px;
+        }
+
+        .btn-outline-light.btn-sm:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(-2px);
+        }
+
+        .btn-outline-light.btn-sm i {
+            font-size: 0.875rem;
+        }
+
+/*Reducir columnas info IMC*/
+.column-info-reducida {
+  white-space: nowrap;         /* Evita que el texto se divida en varias líneas */
+  overflow: hidden;            /* Oculta el texto que se desborda del contenedor */
+  text-overflow: ellipsis;     /* Agrega puntos suspensivos (...) al final del texto */
+  max-width: 87px;            /* Define un ancho máximo para la columna */
+}
+
+    /*Reducir columnas info fechas*/
+.column-info-reducida-fechas {
+  white-space: nowrap;         /* Evita que el texto se divida en varias líneas */
+  overflow: hidden;            /* Oculta el texto que se desborda del contenedor */
+  text-overflow: ellipsis;     /* Agrega puntos suspensivos (...) al final del texto */
+  max-width: 109px;            /* Define un ancho máximo para la columna */
+}
+ 
+
+   /*Reducir columnas info genero*/
+   .column-info-reducida-genero {
+  white-space: nowrap;         /* Evita que el texto se divida en varias líneas */
+  overflow: hidden;            /* Oculta el texto que se desborda del contenedor */
+  text-overflow: ellipsis;     /* Agrega puntos suspensivos (...) al final del texto */
+  max-width: 1px;            /* Define un ancho máximo para la columna */
+}
+
+    /*Reducir columnas info telefono*/
+   .column-info-reducida-tel {
+  white-space: nowrap;         /* Evita que el texto se divida en varias líneas */
+  overflow: hidden;            /* Oculta el texto que se desborda del contenedor */
+  text-overflow: ellipsis;     /* Agrega puntos suspensivos (...) al final del texto */
+  max-width: 5px;            /* Define un ancho máximo para la columna */
+}
+
+/*Reducir columnas info correo*/
+.column-info-reducida-correo {
+  white-space: nowrap;         /* Evita que el texto se divida en varias líneas */
+  overflow: hidden;            /* Oculta el texto que se desborda del contenedor */
+  text-overflow: ellipsis;     /* Agrega puntos suspensivos (...) al final del texto */
+  max-width: 50px;            /* Define un ancho máximo para la columna */
+}
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body style="margin: 0%; padding: 0%;">
+
+
+    <nav class="navbar navbar-dark bg-primary fixed-top" >
+        <div class="container-fluid">
+          <div class="d-flex align-items-center">
+              <button class="btn btn-outline-light btn-sm me-3" onclick="window.location.href='admincontrolpanel.html'">
+                  <i class="fas fa-arrow-left"></i>
+              </button>
+              <a class="navbar-brand" href="#">Gestión de Usuarios</a>
+          </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>            
+          </button> 
+          <div class="offcanvas offcanvas-end text-bg-primary" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">Panel de Administrador</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                    <!--<button class="add-button btn btn-primary" onclick="disableBeforeUnload(); redirectTo('admincontrolpanel.html');">Regresar al Panel</button>-->
+                    <button class="add-button btn btn-primary" onclick="disableBeforeUnload(); redirectTo('usuarioregistro.html');">Agregar Usuario</button>
+                </li>
+   <!-- Filtros en Combobox  -->
+                <div class="filter-container">
+                    <label for="filterType">Seleccione Filtro:</label>
+                    <select id="filterType" onchange="mostrarFiltros()">
+                        <option value="">Seleccione</option>
+                        <option value="todos">Cargar Todos</option>
+                        <option value="idFiltro">Buscar por ID</option>
+                        <option value="nombre">Buscar por Nombre</option>
+                        <option value="apellido">Buscar por Apellido</option>
+                        <option value="sexo">Buscar por Sexo</option>
+                        <option value="rol">Buscar por Rol</option>
+                        <option value="email">Buscar por Email</option>
+                        <option value="asesoriaVencida">Asesoría Vencida</option>
+                    </select>
+            
+                    <div class="filter-inputs">
+                        <input type="number" id="filtroId" class="hidden" placeholder="Ingrese ID">
+                        <input type="text" id="filtroNombre" class="hidden" placeholder="Ingrese Nombre">
+                        <input type="text" id="filtroApellido" class="hidden" placeholder="Ingrese Apellido">
+                        <select id="filtroSexo" class="hidden">
+                            <option value="">Seleccione Sexo</option>
+                            <option value="Hombre">Hombre</option>
+                            <option value="Mujer">Mujer</option>
+                        </select>
+                        <select id="filtroRol" class="hidden">
+                            <option value="">Seleccione el Rol</option>
+                            <option value="ROLE_ADMIN">ADMINISTRADOR</option>
+                            <option value="ROLE_USER">USUARIO</option>
+                        </select>
+                        <input type="text" id="filtroEmail" class="hidden" placeholder="Ingrese Email">
+                        <input type="date" id="filtroFecha" class="hidden">
+            
+                        <button onclick="aplicarFiltro()" class="btn btn-primary">Buscar</button>
+                        <button onclick="cargarTodos()" class="btn btn-primary">Mostrar Todos</button>
+                    </div>
+                </div>
+               
+              </ul>
+             
+            </div>
+          </div>
+        </div>
+      </nav>
+
+ 
+
+    <!-- Tabla de usuarios -->
+    <table style="margin-top: 3%;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Telefono</th>
+                <th>Edad</th>
+                <th>Sexo</th>
+                <th>Usuario</th>
+                <th>Rol</th>
+                <th>Peso</th>
+                <th>Altura</th>
+                <th>IMC</th>
+                <th>Id Rutina</th>
+                <th>Ini. Rutina</th>
+                <th>Id Asesoria</th>
+                <th>F. I. Asesoria</th>
+                <th>Venc. Asesoria</th>
+                <th>F. Creación</th>
+                <th>F. Modificación</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="userTableBody">
+            <!-- Aquí se insertarán los datos de la base de datos -->
+        </tbody>
+    </table>
+
+    <script>
+        let isLoggingOut = false;
+
+// Función para obtener los parámetros desde localStorage
+function getParams() {
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+    
+    if (!id || !session) {
+        console.error("ID o Session no están disponibles en localStorage.");
+        // Si no existen los parámetros, redirigir al login
+        window.location.href = 'login.html';
+    }
+}
+
+// Función para redirigir a una página sin pasar los parámetros por URL (solo datos de id y sesion)
+function redirectTo(page) {
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+    
+    if (id && session) {
+        // Redirigir a la página sin incluir parámetros en la URL
+        window.location.href = page;
+    } else {
+        console.error("ID o Session no están disponibles en localStorage.");
+        // Si no existen los parámetros, redirigir al login
+        window.location.href = 'login.html';
+    }
+}
+
+    // Función para enviar una solicitud con headers y redirigir a paginas con idUsuario adicional 
+    // Solo para redirecciones desde Admin que requieran id, session y un valor id de otro usuario
+    function sendRequestWithHeaders(page, userId) {
+        const id = localStorage.getItem('id');
+        const session = localStorage.getItem('session');
+        
+        if (id && session) {
+            fetch(page, {
+                method: 'GET',
+                headers: {
+                    'id': id,
+                    'session': session,
+                    'userId': userId
+                }
+            }).then(() => {
+                // Guardar los valores de id y userId en localStorage
+                localStorage.setItem('id', id);
+                localStorage.setItem('session', session);
+                                localStorage.setItem('targetUserId', userId);
+                
+                // Redirigir a la página solicitada
+                window.location.href = page;
+            }).catch(error => {
+                console.error('Error en la redirección:', error);
+            });
+        } else {
+            console.error("ID o Session no están disponibles en localStorage.");
+            window.location.href = 'login.html';
+        }
+    }
+
+// Función para hacer logout
+function logout() {
+    isLoggingOut = true; // Indicamos que se está haciendo logout
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+
+    if (id && session) {
+        fetch(`http://localhost:8080/api/autenticacion/logout/${id}/${session}`, {
+            method: 'GET'
+        })
+        .then(response => {
+            if (response.ok) {
+                localStorage.removeItem('id');
+                localStorage.removeItem('session');
+                window.location.href = 'login.html';
+            } else {
+                console.error('Error al cerrar sesión:', response.status);
+               // alert('Error al cerrar sesión. Por favor, intenta de nuevo.');
+            }
+        })
+        .catch(error => {
+            console.error('Error de red:', error);
+            //alert('No se pudo conectar al servidor. Por favor, intenta de nuevo.');
+        });
+    } else {
+        window.location.href = 'login.html';
+    }
+}
+
+// Función para desactivar el beforeunload temporalmente al navegar
+function disableBeforeUnload() {
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+}
+
+// Función para manejar el evento beforeunload
+function handleBeforeUnload(event) {
+    if (!isLoggingOut) {
+        logout();
+    }
+    event.preventDefault();
+    event.returnValue = '';
+}
+
+// Evento beforeunload para logout al cerrar la pestaña o navegador
+window.addEventListener('beforeunload', handleBeforeUnload);
+
+window.onload = function() {
+    getParams();
+}
+
+
+// Mostrar los campos de filtro según el filtro seleccionado
+function mostrarFiltros() {
+    const filterType = document.getElementById("filterType").value;
+
+    // Ocultar todos los campos de entrada de filtro
+    document.getElementById("filtroId").classList.add("hidden");
+    document.getElementById("filtroNombre").classList.add("hidden");
+    document.getElementById("filtroApellido").classList.add("hidden");
+    document.getElementById("filtroSexo").classList.add("hidden");
+    document.getElementById("filtroRol").classList.add("hidden");
+    document.getElementById("filtroEmail").classList.add("hidden");
+    document.getElementById("filtroFecha").classList.add("hidden");
+
+    // Mostrar el campo de filtro correspondiente según la selección
+    if (filterType === "idFiltro") {
+        document.getElementById("filtroId").classList.remove("hidden");
+    } else if (filterType === "nombre") {
+        document.getElementById("filtroNombre").classList.remove("hidden");
+    } else if (filterType === "apellido") {
+        document.getElementById("filtroApellido").classList.remove("hidden");
+    } else if (filterType === "sexo") {
+        document.getElementById("filtroSexo").classList.remove("hidden");
+    } else if (filterType === "rol") {
+        document.getElementById("filtroRol").classList.remove("hidden");
+    } else if (filterType === "email") {
+        document.getElementById("filtroEmail").classList.remove("hidden");
+    } else if (filterType === "asesoriaVencida") {
+        document.getElementById("filtroFecha").classList.remove("hidden");
+    }
+}
+
+// Aplicar el filtro seleccionado
+function aplicarFiltro() {
+    const filterType = document.getElementById("filterType").value;
+    if (filterType === "idFiltro") {
+        filtrarPorId();
+    } else if (filterType === "nombre") {
+        filtrarPorNombre();
+    } else if (filterType === "apellido") {
+        filtrarPorApellido();
+    } else if (filterType === "sexo") {
+        filtrarPorSexo();
+    } else if (filterType === "rol") {
+        filtrarPorRol();
+    } else if (filterType === "email") {
+        filtrarPorEmail();
+    } else if (filterType === "asesoriaVencida") {
+        filtrarPorAsesoriaVencida();
+    } else if (filterType === "todos") {
+        cargarTodos();
+    }
+}
+
+// Cargar todos los usuarios sin enviar id y session en la URL
+function cargarTodos() {
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+    
+    if (id && session) {
+        fetch("http://localhost:8080/api/usuarios/listarUsuarios", {
+            method: 'GET',
+            headers: {
+                'id': id,        // Enviar id en los headers
+                'session': session // Enviar session en los headers
+            }
+        })
+        .then(response => {
+            if (response.status === 401) {
+                // Si el servidor responde con UNAUTHORIZED
+                alert('Error de autenticación. La sesión ha expirado. Vuelva a loguearse.');
+                window.location.href = 'login.html'; // Redirigir a la página de login
+            } else if (response.ok) {
+                return response.json(); // Si la respuesta es OK, devolver los datos
+            } else {
+                throw new Error('Error inesperado al cargar usuarios.');
+            }
+        })
+        .then(data => cargarTabla(data)) // Procesar los datos si se cargaron correctamente
+        .catch(error => console.error('Error al cargar usuarios:', error));
+    } else {
+        window.location.href = 'login.html'; // Redirigir si no hay id y session en localStorage
+    }
+}
+
+// Filtrar por ID
+function filtrarPorId() {
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+    const userId = document.getElementById("filtroId").value;
+    
+    if (id && session && userId) {
+        fetch("http://localhost:8080/api/usuarios/buscarUsuarioId", {
+            method: 'GET',
+            headers: {
+                'id': id,
+                'session': session,
+                'userId': userId
+            }
+        })
+        .then(response => response.json())
+        .then(data => cargarTabla([data]))
+        .catch(error => console.error('Error al buscar por ID:', error));
+    }
+}
+
+// Filtrar por Nombre
+function filtrarPorNombre() {
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+    const nombre = document.getElementById("filtroNombre").value;
+    
+    if (id && session && nombre) {
+        fetch("http://localhost:8080/api/usuarios/listarUsuariosPorNombre", {
+            method: 'GET',
+            headers: {
+                'id': id,
+                'session': session,
+                'nombre': nombre
+            }
+        })
+        .then(response => response.json())
+        .then(data => cargarTabla(data))
+        .catch(error => console.error('Error al buscar por nombre:', error));
+    }
+}
+
+// Filtrar por Apellido
+function filtrarPorApellido() {
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+    const apellido = document.getElementById("filtroApellido").value;
+    
+    if (id && session && apellido) {
+        fetch("http://localhost:8080/api/usuarios/listarUsuariosPorApellido", {
+            method: 'GET',
+            headers: {
+                'id': id,
+                'session': session,
+                'apellido': apellido
+            }
+        })
+        .then(response => response.json())
+        .then(data => cargarTabla(data))
+        .catch(error => console.error('Error al buscar por apellido:', error));
+    }
+}
+
+// Filtrar por Sexo
+function filtrarPorSexo() {
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+    const sexo = document.getElementById("filtroSexo").value;
+    
+    if (id && session && sexo) {
+        fetch("http://localhost:8080/api/usuarios/listarUsuariosPorSexo", {
+            method: 'GET',
+            headers: {
+                'id': id,
+                'session': session,
+                'sexo': sexo
+            }
+        })
+        .then(response => response.json())
+        .then(data => cargarTabla(data))
+        .catch(error => console.error('Error al buscar por sexo:', error));
+    }
+}
+
+// Filtrar por Rol
+function filtrarPorRol() {
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+    const rol = document.getElementById("filtroRol").value;
+    
+    if (id && session && rol) {
+        fetch("http://localhost:8080/api/usuarios/listarUsuariosPorRol", {
+            method: 'GET',
+            headers: {
+                'id': id,
+                'session': session,
+                'rol': rol
+            }
+        })
+        .then(response => response.json())
+        .then(data => cargarTabla(data))
+        .catch(error => console.error('Error al buscar por rol:', error));
+    }
+}
+
+// Filtrar por Email
+function filtrarPorEmail() {
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+    const email = document.getElementById("filtroEmail").value;
+    
+    if (id && session && email) {
+        fetch("http://localhost:8080/api/usuarios/listarUsuariosPorEmail", {
+            method: 'GET',
+            headers: {
+                'id': id,
+                'session': session,
+                'email': email
+            }
+        })
+        .then(response => response.json())
+        .then(data => cargarTabla(data))
+        .catch(error => console.error('Error al buscar por email:', error));
+    }
+}
+
+/* // Filtrar por Asesoría Vencida
+function filtrarPorAsesoriaVencida() {
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+    const fecha = document.getElementById("filtroFecha").value;
+    
+    if (id && session && fecha) {
+        fetch("http://localhost:8080/api/usuarios/listarUsuariosPorAsesoriaVencida", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'id': id,
+                'session': session
+                
+            },
+            body: JSON.stringify({ fecha })
+        })
+        .then(response => response.json())
+        .then(data => cargarTabla(data))
+        .catch(error => console.error('Error al buscar por asesoría vencida:', error));
+    }
+} */
+
+// Filtrar por Asesoría Vencida
+function filtrarPorAsesoriaVencida() {
+    const id = localStorage.getItem('id');
+    const session = localStorage.getItem('session');
+    const fecha = document.getElementById("filtroFecha").value;
+    
+    if (id && session && fecha) {
+        fetch("http://localhost:8080/api/usuarios/listarUsuariosPorAsesoriaVencida", {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'id': id,
+        'session': session
+    },
+    body: JSON.stringify({ fecha })
+})
+        .then(response => response.json())
+        .then(data => cargarTabla(data))
+        .catch(error => console.error('Error al buscar por asesoría vencida:', error));
+    }
+}
+
+        // Función para cargar la tabla con los datos obtenidos
+        function cargarTabla(data) {
+            const userTableBody = document.getElementById("userTableBody");
+            userTableBody.innerHTML = ""; // Limpiar la tabla
+
+            data.forEach(user => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.nombre}</td>
+                    <td>${user.apellido}</td>
+                    <td class="column-info-reducida-correo" >${user.email}</td>
+                    <td class="column-info-reducida-tel" >${user.telefono}</td>
+                    <td>${user.edad}</td>
+                    <td class="column-info-reducida-genero" >${user.sexo}</td>
+                    <td>${user.username}</td>
+                    <td>${user.role}</td>
+                    <td>${user.peso}</td>
+                    <td>${user.altura}</td>
+                    <td class="column-info-reducida" >${user.imc}</td>
+                    <td>${user.idRutinaActual}</td>
+                    <td>${(user.fechaInicioRutina)}</td>
+                    <td>${user.idAsesoriaActual}</td>
+                    <td>${(user.fechaInicioAsesoria)}</td>
+                    <td>${(user.fechaFinAsesoria)}</td>
+                    <td class="column-info-reducida-fechas" >${new Date(user.createdOn).toLocaleString()}</td>
+                    <td class="column-info-reducida-fechas" >${new Date(user.updatedOn).toLocaleString()}</td>                        
+                    <td>
+                        <button class="view-button" onclick="disableBeforeUnload(); verUsuario(${user.id})">Ver</button>
+                        <button class="edit-button" onclick="disableBeforeUnload(); editarUsuario(${user.id})">Modificar</button>
+                        <button class="addrutina-button" onclick="disableBeforeUnload(); agregarRutina(${user.id})">Asignar Rutina</button>
+                        <button class="addasesoria-button" onclick="disableBeforeUnload(); agregarAsesoria(${user.id})">Asignar Asesoria</button>
+                        <button class="delete-button" onclick="disableBeforeUnload(); eliminarUsuario(${user.id})">Eliminar</button>
+                    </td>
+                `;
+
+                userTableBody.appendChild(row);
+            });
+        }
+
+        // Función para redirigir y enviar el id y session por header
+    function verUsuario(id) {
+        sendRequestWithHeaders('/usuariover.html', id);
+    }
+
+    function editarUsuario(id) {
+        sendRequestWithHeaders('/usuarioeditar.html', id);
+    }
+
+    function agregarRutina(id) {
+        sendRequestWithHeaders('/usuariorutinaagregar.html', id);
+    }
+
+    function agregarAsesoria(id) {
+        sendRequestWithHeaders('/usuarioasesoriaagregar.html', id);
+    }
+
+
+        // Cargar la tabla al iniciar
+        document.addEventListener("DOMContentLoaded", cargarTodos);
+
+// Función para eliminar un usuario pasando los parámetros por headers
+function eliminarUsuario(userId) {
+    if (confirm("¿Estás seguro de eliminar este usuario?")) {
+        const id = localStorage.getItem('id');
+        const session = localStorage.getItem('session');
+
+        if (id && session) {
+            fetch('http://localhost:8080/api/usuarios/deleteUsuario', {
+                method: 'DELETE',
+                headers: {
+                    'id': id,
+                    'session': session,
+                    'userId': userId
+                }
+            })
+            .then(response => {
+            if (response.status === 401) {
+                // Si el servidor responde con UNAUTHORIZED
+              //  alert('Error de autenticación. La sesión ha expirado. Vuelva a loguearse.');
+                window.location.href = 'login.html'; // Redirigir a la página de login
+            } else if (response.ok) {
+                return response.json(); // Si la respuesta es OK, devolver los datos
+            } else {
+                throw new Error('Error inesperado al eliminar usuario.');
+            }
+            })
+            .catch(error => {
+                console.error("Error al eliminar el usuario:", error);
+                //alert("Error de red. Por favor, intenta de nuevo.");
+            });
+        } else {
+            console.error("ID o Session no están disponibles en localStorage.");
+            window.location.href = 'login.html';
+        }
+    }
+}
+
+    </script>
+
+</body>
+</html>

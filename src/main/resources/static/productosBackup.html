@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 5px;
+            border: none;
+            color: white;
+            background-color: #007BFF;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .add-button {
+            margin-bottom: 20px;
+        }
+
+        .delete-button {
+            background-color: red;
+        }
+
+        .delete-button:hover {
+            background-color: darkred;
+        }
+
+        .edit-button {
+            background-color: orange;
+        }
+
+        .edit-button:hover {
+            background-color: darkorange;
+        }
+
+        .view-button {
+            background-color: green;
+        }
+
+        .view-button:hover {
+            background-color: darkgreen;
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Gestión de Productos (Panel de Administrador)</h1>
+
+    <!-- Botón para agregar productos -->
+    <button class="add-button" onclick="window.location.href='productoregistro.html'">Agregar Producto</button>
+    <button class="add-button" onclick="window.location.href='admincontrolpanel.html'">Regresar al Panel</button>
+
+    <!-- Tabla de productos -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre Producto</th>
+                <th>Tipo de Producto</th>
+                <th>Marca</th>
+                <th>Descripción</th>
+                <th>Stock</th>
+                <th>Precio</th>
+                <th>Imagen</th>
+                <th>Link de Pago</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="productoTableBody">
+            <!-- Aquí se insertarán los datos de la base de datos -->
+        </tbody>
+    </table>
+
+    <script>
+        // Cargar productos desde el servidor con fetch
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch("http://localhost:8080/api/productos/listarProductos")
+                .then(response => response.json())
+                .then(data => {
+                    const productoTableBody = document.getElementById("productoTableBody");
+
+                    data.forEach(producto => {
+                        const row = document.createElement("tr");
+
+                        row.innerHTML = 
+                            `<td>${producto.id}</td>
+                            <td>${producto.nombreProducto}</td>
+                            <td>${producto.tipoDeProducto}</td>
+                            <td>${producto.marca}</td>
+                            <td>${producto.descripcion}</td>
+                            <td>${producto.stock}</td>
+                            <td>${producto.precio}</td>
+                            <td><img src="${producto.imgUrl}" alt="Imagen" style="width:100px;"/></td>
+                            <td><a href="${producto.linkPago}" target="_blank">Pagar</a></td>
+                            <td>
+                                <button class="view-button" onclick="verProducto(${producto.id})">Ver</button>
+                                <button class="edit-button" onclick="editarProducto(${producto.id})">Modificar</button>
+                                <button class="delete-button" onclick="eliminarProducto(${producto.id})">Eliminar</button>
+                            </td>`;
+
+                        productoTableBody.appendChild(row);
+                    });
+                });
+        });
+
+        // Función para eliminar un producto
+        function eliminarProducto(id) {
+            if (confirm("¿Estás seguro de eliminar este producto?")) {
+                fetch(`http://localhost:8080/api/productos/deleteProducto/${id}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        console.log("Producto eliminado correctamente");
+                        location.reload(); // Recargar la página para actualizar la tabla
+                    } else {
+                        console.log("Error al eliminar el producto");
+                    }
+                });
+            }
+        }
+
+        // Función para editar un producto
+        function editarProducto(id) {
+            window.location.href = `/productoeditar.html?id=${id}`; // Redirige a una página de edición
+        }
+
+        // Función para ver un producto
+        function verProducto(id) {
+            window.location.href = `/productover.html?id=${id}`; // Redirige a la página de detalles del producto
+        }
+    </script>
+
+</body>
+</html>

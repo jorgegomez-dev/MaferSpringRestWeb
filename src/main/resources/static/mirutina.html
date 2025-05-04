@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rutina</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 25px 0;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: none;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Estilo especial para la primera fila (título de la tabla) */
+        tr:first-child td[colspan] {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            padding: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Estilos para días de la semana */
+        #tabla-distribucion tr:nth-child(2) td {
+            background-color: #34495e;
+            color: white;
+            font-weight: 600;
+            padding: 12px;
+        }
+
+        /* Estilos para el contenido de los días */
+        #tabla-distribucion tr:last-child td {
+            font-size: 1.1em;
+            color: #2c3e50;
+            padding: 20px;
+        }
+
+        /* Estilos mejorados para los botones */
+        .buttons {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .buttons a {
+            padding: 12px 25px;
+            margin: 5px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .buttons a:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Estilos para el contenedor de las tablas de ejercicios */
+        #tablasEjercicios {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        /* Estilos responsivos */
+        @media (max-width: 768px) {
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+
+            tr:first-child td[colspan] {
+                font-size: 1em;
+                padding: 15px;
+            }
+        }
+    </style>
+    <script>
+
+        
+
+        async function cargarDistribucion() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const rutinaId = urlParams.get('id'); // Obtener el id de la URL
+
+            if (!rutinaId) {
+                console.log('No se ha especificado una rutina');
+                return;
+            }
+
+            // Realiza la búsqueda de la rutina
+            const respuestaRutina = await fetch(`http://localhost:8080/api/rutinas/buscarRutinaId/${rutinaId}`);
+            const rutina = await respuestaRutina.json();
+
+            // Inserta la distribución semanal
+            const tablaDistribucion = document.getElementById('tabla-distribucion');
+            tablaDistribucion.innerHTML = `
+                <tr><td colspan="7">DISTRIBUCION SEMANAL - ${rutina.nombreRutina}</td></tr>
+                <tr><td>LUNES</td><td>MARTES</td><td>MIERCOLES</td><td>JUEVES</td><td>VIERNES</td><td>SABADO</td><td>DOMINGO</td></tr>
+                <tr>
+                    <td id="diaUno">${await obtenerDia(rutina.diaUno)}</td>
+                    <td id="diaDos">${await obtenerDia(rutina.diaDos)}</td>
+                    <td id="diaTres">${await obtenerDia(rutina.diaTres)}</td>
+                    <td id="diaCuatro">${await obtenerDia(rutina.diaCuatro)}</td>
+                    <td id="diaCinco">${await obtenerDia(rutina.diaCinco)}</td>
+                    <td id="diaSeis">${await obtenerDia(rutina.diaSeis)}</td>
+                    <td id="diaSiete">${await obtenerDia(rutina.diaSiete)}</td>
+                </tr>
+            `;
+        }
+
+        // Obtener día o mostrar "LIBRE" si es null
+        async function obtenerDia(diaId) {
+            if (!diaId) return "LIBRE";
+            const respuestaDia = await fetch(`http://localhost:8080/api/dias/buscarDiaId/${diaId}`);
+            const dia = await respuestaDia.json();
+            return dia.nombreDia || "LIBRE";
+        }
+
+        // Cargar tabla completa de ejercicios cuando se haga clic en el botón
+        async function cargarTablaCompleta() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const rutinaId = urlParams.get('id');
+
+            // Realiza la búsqueda de la rutina
+            const respuestaRutina = await fetch(`http://localhost:8080/api/rutinas/buscarRutinaId/${rutinaId}`);
+            const rutina = await respuestaRutina.json();
+
+            // Cargar ejercicios para cada día no null
+            if (rutina.diaUno) await cargarDia(rutina.diaUno, 1);
+            if (rutina.diaDos) await cargarDia(rutina.diaDos, 2);
+            if (rutina.diaTres) await cargarDia(rutina.diaTres, 3);
+            if (rutina.diaCuatro) await cargarDia(rutina.diaCuatro, 4);
+            if (rutina.diaCinco) await cargarDia(rutina.diaCinco, 5);
+            if (rutina.diaSeis) await cargarDia(rutina.diaSeis, 6);
+            if (rutina.diaSiete) await cargarDia(rutina.diaSiete, 7);
+
+            // Esconder el botón después de cargar las tablas
+            document.getElementById('botonCargar').style.display = 'none';
+        }
+
+        // Cargar tabla para el día
+        async function cargarDia(diaId, numeroDia) {
+            const respuestaDia = await fetch(`http://localhost:8080/api/dias/buscarDiaId/${diaId}`);
+            const dia = await respuestaDia.json();
+
+            let tablaDia = document.createElement('table');
+            tablaDia.innerHTML = `
+                <tr><td colspan="4">DIA ${numeroDia} - ${dia.nombreDia}</td></tr>
+                <tr>
+                    <th>EJERCICIO</th>
+                    <th>SERIES (min-max)</th>
+                    <th>REPETICIONES (min-max)</th>
+                    <th>DESCANSO (min-max)</th>
+                </tr>
+            `;
+
+            // Listado de ejercicios desde la respuesta del día
+            const ejercicios = [
+                dia.ejercicioUno, dia.ejercicioDos, dia.ejercicioTres,
+                dia.ejercicioCuatro, dia.ejercicioCinco, dia.ejercicioSeis,
+                dia.ejercicioSiete, dia.ejercicioOcho, dia.ejercicioNueve,
+                dia.ejercicioDiez
+            ];
+
+            // Recorremos el array de ejercicios y buscamos la información de cada uno
+            for (let i = 0; i < ejercicios.length; i++) {
+                const ejercicioId = ejercicios[i];
+                if (ejercicioId) {
+                    try {
+                        const respuestaEjercicio = await fetch(`http://localhost:8080/api/ejercicios/buscarEjercicioId/${ejercicioId}`);
+                        if (!respuestaEjercicio.ok) throw new Error('Error al obtener el ejercicio');
+                        const ejercicio = await respuestaEjercicio.json();
+
+                        // Si el ejercicio existe, agregamos una fila con los datos
+                        tablaDia.innerHTML += `
+                            <tr>
+                                <td>${ejercicio.nombreEjercicio}</td>
+                                <td>${ejercicio.cantSeriesMin}-${ejercicio.cantSeriesMax}</td>
+                                <td>${ejercicio.cantRepeticionesMin}-${ejercicio.cantRepeticionesMax}</td>
+                                <td>${ejercicio.descansoMinutosMin}-${ejercicio.descansoMinutosMax} minutos</td>
+                            </tr>
+                        `;
+                    } catch (error) {
+                        console.error(`Error al obtener el ejercicio con ID ${ejercicioId}:`, error);
+                    }
+                }
+            }
+
+            // Añadir la tabla del día al cuerpo de la página
+            document.getElementById('tablasEjercicios').appendChild(tablaDia);
+        }
+
+        window.onload = cargarDistribucion;
+    </script>
+</head>
+<body>
+    <h1>Rutina Semanal</h1>
+
+    <!-- Tabla de distribución semanal -->
+    <table id="tabla-distribucion"></table>
+
+    <!-- Botón para cargar la tabla completa -->
+    <div class="buttons">
+        <a href="#" id="botonCargar" onclick="cargarTablaCompleta()">Cargar tabla completa</a>
+    </div>
+
+    <!-- Div donde se colocarán las tablas de ejercicios -->
+    <div id="tablasEjercicios"></div>
+
+    <!-- Botón de volver -->
+    <div class="buttons">
+        <a href="usercontrolpanel.html" id="botonVolver">Volver</a>
+    </div>
+
+</body>
+</html>

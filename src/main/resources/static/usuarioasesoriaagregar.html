@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignar Asesoría</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        form {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+        }
+
+        input:disabled {
+            background-color: #f8f9fa;
+            border-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        input[type="date"] {
+            padding: 11px;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 35px;
+        }
+
+        select:disabled {
+            background-color: #f8f9fa;
+            border-color: #e9ecef;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 10px 5px;
+            border: none;
+            color: white;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: calc(33% - 10px);
+        }
+
+        button[type="submit"] {
+            background-color: #27ae60;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #219a52;
+            transform: translateY(-2px);
+        }
+
+        .add-button {
+            background-color: #3498db;
+        }
+
+        .add-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        /* Estilos para campos numéricos */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Estilos para campos requeridos */
+        select:required:not(:disabled),
+        input:required:not(:disabled) {
+            border-left: 3px solid #3498db;
+        }
+
+        /* Estilos para campos con error */
+        input:invalid:not(:placeholder-shown):not(:disabled) {
+            border-color: #e74c3c;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            form {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            h1 {
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Efectos hover */
+        input:hover:not(:disabled), 
+        select:hover:not(:disabled) {
+            border-color: #3498db;
+        }
+
+        /* Estilos para campos deshabilitados */
+        input:disabled + label,
+        select:disabled + label {
+            color: #6c757d;
+        }
+
+        /* Grupos de campos relacionados */
+        .form-group {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+
+        /* Estilos para el select de asesorías */
+        #asesoria {
+            background-color: #fff;
+            font-weight: 500;
+        }
+
+        #asesoria option {
+            padding: 8px;
+        }
+
+        /* Estilos para el campo de contraseña */
+        input[type="password"] {
+            letter-spacing: 0.1em;
+        }
+
+        /* Estilos para campos de fecha */
+        input[type="date"] {
+            font-family: inherit;
+        }
+
+        /* Contenedor de botones */
+        form > button:last-child {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Asignar Asesoria</h1>
+
+    <form id="editUserForm">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" disabled>
+
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" name="apellido" disabled>
+
+        <label for="email">Correo Electrónico:</label>
+        <input type="email" id="email" name="email" disabled>
+
+        <label for="telefono">Telefono:</label>
+        <input type="number" id="telefono" name="telefono" step="1" disabled>
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" disabled>
+
+        <label for="password">Contraseña (dejar en blanco para no cambiar):</label>
+        <input type="password" id="password" name="password" disabled>
+
+        <label for="role">Rol:</label>
+        <input type="role" id="role" name="role" disabled>
+
+        <label for="peso">Peso (kg):</label>
+        <input type="number" id="peso" name="peso" step="0.01" disabled>
+
+        <label for="altura">Altura (m):</label>
+        <input type="number" id="altura" name="altura" step="0.01" disabled>
+
+        <label for="sexo">Sexo:</label>
+        <select id="sexo" name="sexo" disabled>
+            <option value="" disabled selected>Selecciona el sexo</option>
+            <option value="Hombre">Hombre</option>
+            <option value="Mujer">Mujer</option>
+        </select>
+
+        <label for="urlfotoperfil">Foto de Perfil:</label>
+        <input type="text" id="urlfotoperfil" name="urlfotoperfil" disabled>
+
+        <label for="idRutinaActual">Id Rutina:</label>
+        <input type="number" id="idRutinaActual" name="idRutinaActual" disabled>
+
+        <label for="fechaInicioRutina">Fecha Inicio Rutina:</label>
+        <input type="date" id="fechaInicioRutina" name="fechaInicioRutina" disabled>
+
+        <label for="asesoria">Selecciona una Asesoría:</label>
+        <select id="asesoria" name="asesoria" required>
+            <option value="" disabled selected>Selecciona una asesoría</option>
+        </select>
+
+        <label for="fechaInicioAsesoria">Fecha Inicio Asesoría:</label>
+        <input type="date" id="fechaInicioAsesoria" name="fechaInicioAsesoria" required>
+
+        <button type="submit">Guardar Cambios</button>
+        <button class="add-button" onclick="window.location.href='usuarios.html'">Volver</button>
+        <button class="add-button" onclick="window.location.href='admincontrolpanel.html'">Regresar al Panel</button>
+    </form>
+
+    <script>
+        // Obtener el ID del usuario desde localStorage
+        const id = localStorage.getItem('id');
+        const session = localStorage.getItem('session');
+        const userId = localStorage.getItem('targetUserId');
+        
+        // Verificar que los datos existan
+        if (!id || !session || !userId) {
+            console.error("ID o Session no están disponibles en localStorage.");
+            window.location.href = 'login.html'; // Redirigir al login
+        }
+
+
+        // Función para cargar datos del usuario
+        function cargarDatosUsuario(userId) {
+            fetch(`http://localhost:8080/api/usuarios/buscarUsuarioId`, {
+                method: 'GET',
+                headers: {
+                    'id': id,
+                    'session': session,
+                    'userId': userId
+                }
+            })
+            .then(response => {
+            if (response.status === 401) {
+                // Si el servidor responde con UNAUTHORIZED
+                alert('Error de autenticación. La sesión ha expirado. Vuelva a loguearse.');
+                window.location.href = 'login.html'; // Redirigir a la página de login
+            } else if (response.ok) {
+                return response.json(); // Si la respuesta es OK, devolver los datos
+            } else {
+                throw new Error('Error inesperado al cargar usuarios.');
+            }
+        })
+                .then(user => {
+                    // Verificar y asignar los valores de los campos
+                    document.getElementById('nombre').value = user.nombre || '';
+                    document.getElementById('apellido').value = user.apellido || '';
+                    document.getElementById('email').value = user.email || '';
+                    document.getElementById('telefono').value = user.telefono || 0;
+                    document.getElementById('username').value = user.username || '';
+                    document.getElementById('password').value = null;
+                    document.getElementById('role').value = user.role || '';
+                    document.getElementById('peso').value = user.peso || 0;
+                    document.getElementById('altura').value = user.altura || 0;
+                    document.getElementById('sexo').value = user.sexo || '';
+                    document.getElementById('urlfotoperfil').value = user.urlfotoperfil || '';
+                    document.getElementById('idRutinaActual').value = user.idRutinaActual || 0;
+                    document.getElementById('fechaInicioRutina').value = user.fechaInicioRutina || '';
+                    document.getElementById('fechaInicioAsesoria').value = user.fechaInicioAsesoria || '';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('No se pudo cargar el usuario.');
+                });
+        }
+
+        // Función para cargar asesorías
+        function cargarAsesorias() {
+            fetch("http://localhost:8080/api/asesorias/listarAsesorias")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al cargar las asesorías');
+                    }
+                    return response.json();
+                })
+                .then(asesorias => {
+                    const asesoriaSelect = document.getElementById('asesoria');
+                    asesorias.forEach(asesoria => {
+                        const option = document.createElement('option');
+                        option.value = asesoria.id; // Guardar el ID de la asesoría
+                        option.textContent = asesoria.nombreAsesoria; // Mostrar el nombre de la asesoría
+                        asesoriaSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('No se pudieron cargar las asesorías.');
+                });
+        }
+
+        // Cargar los datos del usuario y las asesorías al iniciar
+            cargarDatosUsuario(userId);
+            cargarAsesorias();
+
+
+        // Manejar la actualización del usuario
+document.getElementById('editUserForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Evitar el envío por defecto
+    console.log('Formulario enviado'); // Verificar que el evento se ejecute
+
+    // Asegúrate de que los campos estén habilitados antes de capturar sus valores
+    const userData = {
+        nombre: document.getElementById('nombre').value,
+        apellido: document.getElementById('apellido').value,
+        email: document.getElementById('email').value,
+        telefono: document.getElementById('telefono').value,
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value || null, // O null si está vacío
+        role: document.getElementById('role').value,
+        peso: parseFloat(document.getElementById('peso').value),
+        altura: parseFloat(document.getElementById('altura').value),
+        sexo: document.getElementById('sexo').value,
+        urlfotoperfil: document.getElementById('urlfotoperfil').value,
+        idRutinaActual: document.getElementById('idRutinaActual').value,
+        fechaInicioRutina: document.getElementById('fechaInicioRutina').value,
+        fechaInicioAsesoria: document.getElementById('fechaInicioAsesoria').value,
+        idAsesoriaActual: parseFloat(document.getElementById('asesoria').value) // Asegúrate de que esto esté definido correctamente
+    };
+
+    console.log('Datos del usuario a enviar:', userData); // Verifica que los datos sean correctos
+
+    fetch(`http://localhost:8080/api/usuarios/updateUsuarioAdmin`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'id': id,
+            'session': session,
+            'userId': userId
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => {
+        console.log('Respuesta del servidor:', response); // Verifica la respuesta del servidor
+        if (response.ok) {
+            console.log('Usuario actualizado con éxito');
+            window.location.href = 'usuarios.html'; // Redirigir después de actualizar
+        } else {
+            throw new Error('Error al actualizar el usuario');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error); // Verifica si hay errores en la consola
+        console.log('No se pudo actualizar el usuario.');
+    });
+});
+    </script>
+
+</body>
+</html>

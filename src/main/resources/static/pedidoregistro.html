@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Pedido</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 5px;
+            border: none;
+            color: white;
+            background-color: #007BFF;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        label, select, input {
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Registro de Pedido</h2>
+    <form id="registroPedidoForm">
+
+        <label for="idUsuario">ID Usuario:</label>
+        <input type="number" id="idUsuario" name="idUsuario" required><br>
+
+        <h3>Productos</h3>
+        
+        <div id="productosContainer"></div>
+        
+        <label for="precioTotal">Precio Total:</label>
+        <input type="number" id="precioTotal" name="precioTotal" readonly><br>
+
+        <label for="estado">Estado:</label>
+        <input type="text" id="estado" name="estado" value="activo" readonly><br><br>
+
+        <button type="submit">Registrar Pedido</button>
+    </form>
+
+    <script>
+        const productosContainer = document.getElementById('productosContainer');
+        const maxProductos = 10;
+        let productos = [];
+
+        // Fetch productos y crea los select boxes
+        fetch("http://localhost:8080/api/productos/listarProductos")
+            .then(response => response.json())
+            .then(data => {
+                productos = data;
+                for (let i = 1; i <= maxProductos; i++) {
+                    crearProductoSelect(i);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+
+        function crearProductoSelect(index) {
+            const div = document.createElement('div');
+            
+            div.innerHTML = `
+                <label for="idProducto${index}">Producto ${index}:</label>
+                <select id="idProducto${index}" name="idProducto${index}">
+                    <option value="">Seleccione un producto</option>
+                    ${productos.map(producto => `<option value="${producto.id}">${producto.nombre}</option>`).join('')}
+                </select>
+
+                <label for="cantProducto${index}">Cantidad:</label>
+                <input type="number" id="cantProducto${index}" name="cantProducto${index}" min="0"><br>
+            `;
+            productosContainer.appendChild(div);
+        }
+
+        document.getElementById('registroPedidoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const data = {};
+
+            formData.forEach((value, key) => {
+                if (value) {
+                    data[key] = value;
+                }
+            });
+
+            data.estado = "activo"; // Estado predefinido
+
+            fetch('http://localhost:8080/api/pedidos/crearPedido', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Pedido creado con éxito');
+                } else {
+                    console.log('Hubo un error al registrar el pedido.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
